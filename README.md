@@ -1,22 +1,29 @@
 ## Mock Ups
 
-Sign In Page
+### Sign In Page
 <p align="center">
   <img src="./docs/images/signin_desktop_mock.png" alt="Sign In Desktop" height="400px">
   <img src="./docs/images/signin_mobile_mock.png" alt="Sign In Mobile" height="400px">
 </p>
 
-Books
+### Books
 <p align="center">
   <img src="./docs/images/books_desktop_mock.png" alt="Books Desktop" height="400px">
   <img src="./docs/images/books_mobile_mock.png" alt="Books Mobile" height="400px">
 </p>
 
-Sheet
+### Sheet
 <p align="center">
   <img src="./docs/images/sheet_desktop_mock.png" alt="Sheet Desktop" height="400px">
   <img src="./docs/images/sheet_mobile_mock.png" alt="Sheet Mobile" height="400px">
 </p>
+
+## Routing plan
+
+<p align="center">
+  <img src="./docs/images/frontend_routing.png" alt="Frontend routing" height="400px">
+</p>
+
 
 ## Design consideration: Whether to use React framework Next.js
 
