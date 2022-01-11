@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+## Mock Ups
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Sign In Page
+<p align="center">
+  <img src="./docs/images/signin_desktop_mock.png" alt="Sign In Desktop" height="400px">
+  <img src="./docs/images/signin_mobile_mock.png" alt="Sign In Mobile" height="400px">
+</p>
 
-## Available Scripts
+Books
+<p align="center">
+  <img src="./docs/images/books_desktop_mock.png" alt="Books Desktop" height="400px">
+  <img src="./docs/images/books_mobile_mock.png" alt="Books Mobile" height="400px">
+</p>
 
-In the project directory, you can run:
+Sheet
+<p align="center">
+  <img src="./docs/images/sheet_desktop_mock.png" alt="Sheet Desktop" height="400px">
+  <img src="./docs/images/sheet_mobile_mock.png" alt="Sheet Mobile" height="400px">
+</p>
 
-### `yarn start`
+## Design consideration: Whether to use React framework Next.js
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Benefits of using Next.js:
+- Better performance, eg bundling, code splitting for faster page loads
+  - Our attendance application handles a lot of data, and could benefit from the performance benefits of using Next.js.
+- Search engine optimization
+  - There's not a lot of content in our application, and growing the usage of our application is not really the main goal of our project.
+- Server-side rendering, pre-rendering of pages
+  - Can have performance benefits, but learning curve and short timeline for project likely doesn't justify the performance benefits
+- Page based routing system
+  - reported issues with dynamic routing, backend seems to want dynamic routing
+- Built in CSS and Sass support
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The benefits of using the Next.js framework doesn't outweigh the costs of using it, so I decided not to use it.
 
-### `yarn test`
+## Design consideration: Whether to use TypeScript with React for type checking
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Benefits of using TypeScript:
+- Can define prop types, reducing potential for bugs
+- Better code completion with jsx and better intellisense, auto import
+- More readable and confidence in code
 
-### `yarn build`
+Costs:
+- Learning curve
+- third party libraries might not support typescript
+- Slightly longer compilation time
+- Need to write more code
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The benefits of using Typescript with React is also not significant enough, so I decided not to use it.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## URL Path Design
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Avoid adding data that are internal to the component and shouldn't be accessed from outside
+- Places where users should start from the beginning
 
-### `yarn eject`
+I think that attendance sheets should be able to be accessed from outside.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**(NOT SELECTED) Option 1:** `www.attendex.com/cs1010-tutorial/1-10-22` where `cs1010-tutorial` is the name of the attendance book, `1-10-22` is the date accessed. But when accessing such a page, we must make sure that the authentication token saved in the browser is valid, then we get the userid from the token and try and automatically load the specified attendance book and date. (Evaluation: It might be inefficient to be checking authentication first, then checking whether the specified attendance book and date exists)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**(SELECTED) Option 2:** `www.attendex.com/lily/cs1010-tutorial/1-10-22` where `lily` is the userid, `cs1010-tutorial` is the name of the attendance book, `1-10-22` is the date accessed. But when accessing such a page, we must make sure that the authentication token saved in the browser matches the userid before allowing access to the page. (Evaluation: Users usually know their userid, so it makes sense for them to be accessing this page from outside.)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Note for backend: auth token needs to contain userid
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**(NOT SELECTED) Option 3:** `www.attendex.com/attendance-sheets` a generic, static path, where the data about which attendance book and date will be passed through other means. The problem with this approach is, when users try and access the attendance sheet from outside the website, there will probably be an error, since the data about which attendance sheet and which date isn't passed properly.
