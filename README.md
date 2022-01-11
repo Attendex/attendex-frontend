@@ -96,3 +96,31 @@ Why Chakra UI:
 - Supposed to be easier to customize than material UI
 
 **Final evaluation:** I think that chakra UI would be better for a project that has more focus on the UI design, where there is a set design, as chakra seems easier to manipulate and customize compared to material ui. Since that is not the main focus of this project, I chose to use material ui. Material UI also has more features for each component that we can make use of for our project.
+
+## Best Practice: When to use functional components and class components in React
+
+Use functional components when it doesn't need a state, use class when you need state. Use FC when they simply accept data and display them in some form (usually not interactive). But react hooks allow you to access state and all in functional components.
+
+## Best practice (before react hooks): React render props pattern
+
+Sharing code between react components using a prop whose value is a function.
+
+Traditionally, if we have 2 components that are similar, we can abstract it out by abstracting common logic (like state and methods), and placing it into a wrapper component into the state. This is passing a react component into a wrapper component as a prop. We do this when we want to abstract out common logic (methods) and state from 2 components with different styling. (This is when we can't abstract out by changing the styling using props.)
+
+[Video explaining render props pattern](https://www.youtube.com/watch?v=3IdCQ7QAs38)
+
+## Best practice (before react hooks): Higher order component pattern
+
+If we have multiple component doing the same logic (increment count method, and count variable in state), but have slightly different displays, `Hovered X times` vs `Clicked X times` then a lot of code duplication. If both components have same parent component, we can simply lift the state of count into parent, and pass the handlers as props. But if they have different parents, will have duplicate state and handlers everywhere still.
+
+This one is basically adding a wrapper around the component which adds a specific function/feature to the original component. (eg. passing an additional prop) For reducing duplication, we would be putting the common logic into this higher order component. I think this is similar to react context, except that react context is for props and HOCs are for things like state and methods.
+
+## Best practice: React context
+
+Use react context to make a prop value available throughout everything wrapped within the context. (can use `useContext` hook to access it, in place of `Consumer` component)
+
+## Best practice:
+
+Use react hooks to abstract out common logic/state.
+
+[Video explaining react hooks](https://www.youtube.com/watch?v=TNhaISOUy6Q)
