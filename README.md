@@ -69,3 +69,30 @@ I think that attendance sheets should be able to be accessed from outside.
 Note for backend: auth token needs to contain userid
 
 **(NOT SELECTED) Option 3:** `www.attendex.com/attendance-sheets` a generic, static path, where the data about which attendance book and date will be passed through other means. The problem with this approach is, when users try and access the attendance sheet from outside the website, there will probably be an error, since the data about which attendance sheet and which date isn't passed properly.
+
+## Choice of design system: Material UI VS Chakra UI
+
+UI component required | Material UI | Chakra UI
+--- | --- | --- 
+Form input (username, password, confirm password, text) | can do validation, have the basic form input boxes | I like how chakra ui has an editable component, that would be very useful, but we are not allowing people to edit the member names in this version, so i dont know how important that component would be. it has the basic input form boxes
+Button | abit uglier because they capitalize the words by default | nicer buttons than material ui, can add icons and button loading state
+Datepicker, select | Have datepicker (in mui lab) and nice dropdown | no built in datepicker, has basic dropdown
+Tags (for member names) | called chips, has built in deletable prop | has tags and also built in deletable prop
+Checkbox for attendance | have nice radio and checkboxes | have acceptable radio and checkboxes
+Modal for forms | basic modal is a little ugly,, can consider using dialogs also | have nicer modals
+Popup to instruct users to use the app | dont really have popup | can use tooltip for this
+Table for attendance table | basic table looks okay, but need to style using styled function to customize color | seems similar to material ui table
+Cards for attendance books | might be hard to use cards out of the box, might want to create own card component | doesn't have card component... :(
+Header? | can use app bar | don't really have something i can use for header
+Icons | has built in icons | also has built in icons
+
+Why Material UI:
+- It seems to be [easy to do color customization](https://medium.com/swlh/create-a-customized-color-theme-in-material-ui-7205163e541f) in material ui also, which is often troublesome with most UI libraries. 
+- In general it seems that the material UI components come with more features compared to chakra UI. 
+
+Why Chakra UI:
+- Seems like Chakra UI can also do themes quite easily in a similar way as material ui, furthermore, chakra ui allows for [custom css to style the components, and allow css variables so we wont have to duplciate theme values](https://chakra-ui.com/docs/features/css-variables).
+- Chakra seems to be more focused on creation of flexible, composable and scalable code
+- Supposed to be easier to customize than material UI
+
+**Final evaluation:** I think that chakra UI would be better for a project that has more focus on the UI design, where there is a set design, as chakra seems easier to manipulate and customize compared to material ui. Since that is not the main focus of this project, I chose to use material ui. Material UI also has more features for each component that we can make use of for our project.
