@@ -1,7 +1,10 @@
+import React, { useState } from 'react';
 import { Card, TextField, Typography, Box, Button } from '@mui/material';
 
 
 function SignInPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   return (
     <Box sx={{ height: '100vh', padding: '1rem' }}>
       <Box sx={{ position: 'relative', top: '20%' }}>
@@ -21,11 +24,23 @@ function SignInPage() {
           <Typography variant="h3" sx={{ color: 'grey' }}>
             Sign In
           </Typography>
-          <TextField label="Username" variant="outlined" margin="normal" sx={{width: '90%'}}/>
-          <TextField label="Password" type="password" margin="normal" sx={{width: '90%'}}/>
+          <TextField 
+            label="Username" 
+            variant="outlined" 
+            margin="normal" 
+            sx={{ width: '90%' }}
+            onChange={(event) => setUsername(event.target.value)} 
+          />
+          <TextField 
+            label="Password" 
+            type="password" 
+            margin="normal" 
+            sx={{width: '90%'}}
+            onChange={(event) => setPassword(event.target.value)}
+          />
           <Button variant="contained">Sign In</Button>
         </Card>
-        <Button variant="none" sx={ {margin:'1rem' }} href="/signup">Don't have an account? Sign up here</Button>
+        <Button variant="none" sx={{ margin:'1rem' }} href="/signup">Don't have an account? Sign up here</Button>
       </Box>
     </Box>
   );

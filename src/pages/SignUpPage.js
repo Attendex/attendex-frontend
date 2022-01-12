@@ -6,11 +6,7 @@ function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isMatch, setMatch] = useState(true);
-  // console.log('username', username);
-  console.log('password', password);
-  console.log('confirmPassword', confirmPassword);
-  const validatePass = () => { setMatch(password == confirmPassword)}
+
   return (
     <Box sx={{ height: '100vh', padding: '1rem' }}>
       <Box sx={{ position: 'relative', top: '20%' }}>
