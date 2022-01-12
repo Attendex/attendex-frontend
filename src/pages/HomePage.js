@@ -1,34 +1,16 @@
 import React, { useState } from 'react';
-import { Card, TextField, Typography, Box, Button } from '@mui/material';
-
-// Replace with username route param
-const username = "lily"
-
-// Replace with payload from get all books endpoint
-const attBooks = [{
-  "bookName": "CS1231S Lecture",
-  "bookID": "1"
-},
-{
-  "bookName": "CS1231S Tutorial",
-  "bookID": "2"
-},
-{
-  "bookName": "Soccer Practice",
-  "bookID": "3"
-},
-{
-  "bookName": "CS1231S Lab",
-  "bookID": "7"
-},
-]
+import { Card, TextField, Typography, Box, Button, Grid } from '@mui/material';
+import Header from '../components/Header';
+import { useTheme } from '@mui/material/styles';
+import MyAttendanceBooks from '../components/MyAttendanceBooks';
 
 function HomePage() {
   // const [username, setUsername] = useState('');
 
   return (
-    <Box sx={{ height: '100vh', padding: '1rem' }}>
-      
+    <Box sx={{ height: '100%' }}>
+      <Header />
+      <MyAttendanceBooks />
     </Box>
   );
 }
