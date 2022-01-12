@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Stack, Card, TextField, Typography, Box, Button, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
-import Header from '../components/Header';
-import { useTheme } from '@mui/material/styles';
-import MyAttendanceBooks from '../components/MyAttendanceBooks';
+import ViewMembers from '../components/ViewMembers'
 import { useParams } from 'react-router-dom';
 
 
@@ -47,12 +45,12 @@ function SheetHeader() {
             label="Date"
             onChange={handleChange}
           >
-            {dates.map((date) => <MenuItem value={date.date}>{date.date}</MenuItem>)}
+            {dates.map((date) => <MenuItem value={date.date} key={date.date}>{date.date}</MenuItem>)}
           </Select>
         </FormControl>
       </Stack>
       <Grid container spacing={1}>
-        <Grid item sm={6} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}}>View Members</Button></Grid>
+        <Grid item sm={6} xs={4}><ViewMembers /></Grid>
         <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}}>Delete Today's Sheet</Button></Grid>
         <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}}>Create New Sheet</Button></Grid>
       </Grid>

@@ -3,7 +3,7 @@ import { Typography, Box, Button, Stack } from '@mui/material';
 // Replace with username route param
 const username = "lily"
 
-function HomePage() {
+function Header() {
   return (
     <Box sx={{ 
       padding: '1rem', 
@@ -25,4 +25,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Header;
