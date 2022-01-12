@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Card, TextField, Typography, Box, Button, Stack } from '@mui/material';
+import { Typography, Box, Button, Stack } from '@mui/material';
 
 // Replace with username route param
 const username = "lily"

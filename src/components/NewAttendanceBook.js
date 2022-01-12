@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Card, TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { useState } from 'react';
+import { TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 function NewAttendanceBook() {
