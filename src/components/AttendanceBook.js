@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { Card, TextField, Typography, Box, Button, Grid } from '@mui/material';
-import Header from '../components/Header';
+import { Typography, Box, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 function AttendanceBook(props) {
   const theme = useTheme();
+  let navigate = useNavigate();
 
   return (
     <Grid item xs={12} sm={4}>
       <Box
+        onClick={()=> navigate('/sheet')}
         sx={{
           backgroundColor: theme.palette.primary.light,
           display: 'flex',

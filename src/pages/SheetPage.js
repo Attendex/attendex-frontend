@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Card, TextField, Typography, Box, Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import Header from '../components/Header';
-import { useTheme } from '@mui/material/styles';
-import MyAttendanceBooks from '../components/MyAttendanceBooks';
+import { useParams } from 'react-router-dom';
+import SheetHeader from '../components/SheetHeader';
 
-function HomePage() {
-  // const [username, setUsername] = useState('');
+// URL path would be /:username/:bookId/:bookName/:sheetId/:date
+
+function SheetPage() {
+  // const { username, bookId, bookName, sheetId, date } = useParams();
 
   return (
     <Box sx={{ height: '100%' }}>
       <Header />
-      <MyAttendanceBooks />
+      <SheetHeader />
     </Box>
   );
 }
 
-export default HomePage;
+export default SheetPage;
