@@ -1,3 +1,10 @@
+## Project Set Up
+
+- `yarn` to install dependencies
+- Fill up `.env` file according to provided `.env sample`
+- `yarn start` to run app on localhost:3001
+- Run backend server
+
 ## Mock Ups
 
 ### Sign In Page
