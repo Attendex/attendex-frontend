@@ -45,10 +45,10 @@ function SignUpPage() {
             type="password" 
             margin="normal" 
             sx={{width: '90%'}} 
-            error={password != confirmPassword} 
+            error={password !== confirmPassword} 
             onChange={(event) => setConfirmPassword(event.target.value)} 
           />
-          <Button variant="contained">Sign Up</Button>
+          <Button variant="contained" href="/username">Sign Up</Button>
         </Card>
         <Button variant="none" sx={ {margin:'1rem' }} href="/signin">Already have an account? Sign in here</Button>
       </Box>
