@@ -26,7 +26,11 @@ function BookLandingPage() {
           const sheetId = res.data[0].sheetID;
           navigate(`/${username}/${bookName}/${bookId}/${date}/${sheetId}`);
         } 
-      })
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    })
   }, []);
 
   return (

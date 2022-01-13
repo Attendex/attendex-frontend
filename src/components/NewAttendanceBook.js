@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { getToken } from '../utils/utils';
 
 function NewAttendanceBook(props) {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [newBookName, setNewBookName] = useState('');
@@ -18,7 +20,11 @@ function NewAttendanceBook(props) {
       .then(res => {
         onAdd();
         setOpen(false);
-      })
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    })
   }
 
   return (

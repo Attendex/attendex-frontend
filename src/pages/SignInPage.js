@@ -21,7 +21,6 @@ function SignInPage() {
         const decoded = jwt_decode(res.data.accessToken);
         navigate(`/${decoded.userid}`);
       })
-
   };
 
   return (

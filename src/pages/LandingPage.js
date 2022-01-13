@@ -13,6 +13,7 @@ function LandingPage() {
   useEffect(() => {
     // Get token from localStorage
     const token = getToken();
+    
     // if token not found, redirect to /signin
     if (token === null) {
       navigate(`/signin`);
@@ -21,7 +22,7 @@ function LandingPage() {
       const decoded = jwt_decode(token);
       navigate(`/${decoded.userid}`);
     }
-  }); // only rerun if things in the square bracket changes
+  });
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center' }}>

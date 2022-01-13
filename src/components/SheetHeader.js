@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Stack, Typography, Button, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import ConfirmationDialog from './ConfirmationDialog';
 import NewSheetDialog from './NewSheetDialog';
@@ -28,6 +29,7 @@ const dates = [
 ]
 
 function SheetHeader(props) {
+  const navigate = useNavigate();
   const { withDateSelector } = props;
   const { bookId, bookName, sheetId, date } = useParams();
   const [dates, setDates] = useState([]);
@@ -45,7 +47,11 @@ function SheetHeader(props) {
         const dates = res.data;
         setSelectedDate(dates[0].date);
         setDates(dates);
-      })
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    })
   }, []);
 
   const handleSelectDate = (event) => {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Typography, Box, Grid } from '@mui/material';
 import AttendanceBook from './AttendanceBook';
@@ -6,6 +7,7 @@ import NewAttendanceBook from './NewAttendanceBook';
 import { getToken } from '../utils/utils';
 
 function MyAttendanceBooks() {
+  const navigate = useNavigate();
   const [attBooks, setAttBooks] = useState([]);
 
   const fetchAttBooks = () => {
@@ -15,7 +17,11 @@ function MyAttendanceBooks() {
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {
         setAttBooks(res.data);
-      })
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    })
   }
 
   useEffect(() => {
