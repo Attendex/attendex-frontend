@@ -24,6 +24,11 @@
   <img src="./docs/images/frontend_routing.png" alt="Frontend routing" height="400px">
 </p>
 
+## React Component Diagram
+
+<p align="center">
+  <img src="./docs/images/react_component_diag.png" alt="Frontend component diagram" height="400px">
+</p>
 
 ## Design consideration: Whether to use React framework Next.js
 

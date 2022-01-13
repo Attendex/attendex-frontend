@@ -1,37 +1,14 @@
-import { Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, TextField } from '@mui/material';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
+import { Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
+import ConfirmationDialog from './ConfirmationDialog';
 
-function ConfirmationDialog (props) {
-  const { onClose, open } = props;
-
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-    >
-      <DialogTitle>
-        Save member data?
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Please note that ALL ATTENDANCE DATA of deleted members will be permanently deleted. Proceed to save member data?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => onClose(false)}>Disagree</Button>
-        <Button onClick={() => onClose(true)} autoFocus>Agree</Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
 
 function MemberDialog(props) {
   const { onClose, open } = props;
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [newMember, setNewMember] = useState('');
+  const [newMember, setNewMember] = useState(null);
+  const [memberToDelete, setMemberToDelete] = useState(null);
   const [tempCounter, setCounter] = useState(3);
   // Replace with payload from get all members from book
   const [members, setMembers] = useState([
@@ -60,10 +37,17 @@ function MemberDialog(props) {
     setMembers(newMembers);
     setCounter(tempCounter+1);
     setNewMember('');
+    // API call to add member
   };
 
-  const handleDelete = (memberToDelete) => () => {
-    setMembers((members) => members.filter((member) => member.memberID !== memberToDelete.memberID));
+  const handleDelete = (isConfirmed) => {
+    if (isConfirmed) {
+      setMembers((members) => members.filter((member) => member.memberID !== memberToDelete.memberID));
+      // API call to delete member
+      setMemberToDelete(null);
+    } else {
+      onClose();
+    }
   };
 
   return (
@@ -86,14 +70,20 @@ function MemberDialog(props) {
           <Chip
             key={member.memberID}
             label={member.memberName}
-            onDelete={handleDelete(member)}
+            onDelete={() => {setOpenConfirmation(true); setMemberToDelete(member);}}
           />
         ))}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => setOpenConfirmation(true)}>Save</Button>
-        <ConfirmationDialog open={openConfirmation} onClose={(isConfirmed) => { setOpenConfirmation(false); handleSave(isConfirmed) }} />
+        <Button onClick={onClose}>Done</Button>
+        <ConfirmationDialog 
+          open={openConfirmation} 
+          onClose={(isConfirmed) => { setOpenConfirmation(false); handleDelete(isConfirmed);}}
+          title="Delete member data?"
+          text="Please note that ALL ATTENDANCE DATA of deleted members will be permanently deleted. Proceed to delete member?"
+          cancelButtonText="Cancel"
+          actionButtonText="Delete"
+        />
       </DialogActions>
     </Dialog>
   );
