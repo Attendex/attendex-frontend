@@ -12,8 +12,8 @@ function SheetPage() {
   return (
     <Box sx={{ height: '100%' }}>
       <Header username={username}/>
-      <SheetHeader />
-      <Attendances />
+      <SheetHeader withDateSelector={true} />
+      <Attendances emptyAttendances={false} />
     </Box>
   );
 }

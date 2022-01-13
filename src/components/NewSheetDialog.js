@@ -11,7 +11,7 @@ function SheetDatePicker() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
         label="Date for new sheet"
-        value={value}
+        value={Date.now()}
         onChange={(newValue) => {
           setValue(newValue);
         }}

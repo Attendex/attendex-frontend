@@ -11,7 +11,8 @@ import { useState } from 'react';
 
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
-function AttendanceTable() {
+function AttendanceTable(props) {
+  const { emptyTable } = props;
   const theme = useTheme();
   const [memberAttendances, setMemberAttendances] = useState([
     {
@@ -47,7 +48,8 @@ function AttendanceTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {memberAttendances.map((memberAttendance, index) => (
+            {emptyTable ? <TableRow><TableCell align="center" colSpan={2}>Add members above to begin</TableCell></TableRow>
+            : memberAttendances.map((memberAttendance, index) => (
               <TableRow
                 key={index}
                 sx={{ 

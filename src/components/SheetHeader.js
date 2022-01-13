@@ -27,7 +27,8 @@ const dates = [
   }
 ]
 
-function SheetHeader() {
+function SheetHeader(props) {
+  const { withDateSelector } = props;
   const { bookId, bookName, sheetId, date } = useParams();
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
@@ -69,7 +70,7 @@ function SheetHeader() {
         <Typography variant="h4">{bookName}</Typography>
         <FormControl>
           <InputLabel id="demo-simple-select-label">Date</InputLabel>
-          <Select
+          { withDateSelector ? <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={selectedDate}
@@ -77,12 +78,12 @@ function SheetHeader() {
             onChange={handleSelectDate}
           >
             {dates.map((date) => <MenuItem value={date.date} key={date.date}>{date.date}</MenuItem>)}
-          </Select>
+          </Select> : null}
         </FormControl>
       </Stack>
       <Grid container spacing={1}>
         <Grid item sm={6} xs={4}><ViewMembers /></Grid>
-        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenDelConfirmation(true)}>Delete Today's Sheet</Button></Grid>
+        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenDelConfirmation(true)}>Delete Sheet</Button></Grid>
         <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenCreateConfirmation(true)}>Create New Sheet</Button></Grid>
       </Grid>
       <ConfirmationDialog 

@@ -3,13 +3,13 @@ import AttendanceTable from './AttendanceTable';
 
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
-function Attendances() {
-  // const { username, bookId, bookName, sheetId, date } = useParams();
-
+function Attendances(props) {
+  const { emptyAttendance } = props;
+  
   return (
     <Box sx={{ marginTop: '1rem' }}>
       <Typography variant="h5">Attendances</Typography>
-      <AttendanceTable />
+      <AttendanceTable emptyTable={emptyAttendance} />
     </Box>
   );
 }

@@ -5,6 +5,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 import { getToken } from '../utils/utils';
+import Header from '../components/Header';
+import SheetHeader from '../components/SheetHeader';
+import Attendances from '../components/Attendances';
 
 // URL path would be /
 
@@ -18,30 +21,19 @@ function BookLandingPage() {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {
-        if (res.data.length === 0) {
-          // get today's date
-          const today = new Date();
-          const formattedDate = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
-          
-          // create sheet for today
-          axios.post(`${process.env.REACT_APP_BACKEND_URL}/addsheet`,
-            {"bookid": bookId, "date": formattedDate},
-            { headers: {"Authorization" : `Bearer ${token}`}})
-            .then(res => {
-              const sheetId = res.data.sheetID;
-              navigate(`/${username}/${bookName}/${bookId}/${formattedDate}/${sheetId}`);
-            })
-        } else {
+        if (res.data.length > 0) {
           const date = res.data[0].date;
           const sheetId = res.data[0].sheetID;
           navigate(`/${username}/${bookName}/${bookId}/${date}/${sheetId}`);
-        }
+        } 
       })
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center' }}>
-      <CircularProgress />
+    <Box sx={{ height: '100%' }}>
+      <Header username={username}/>
+      <SheetHeader withDateSelector={false} />
+      <Attendances emptyAttendance={true} />
     </Box>
   );
 }

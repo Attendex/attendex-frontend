@@ -92,7 +92,7 @@ function MemberDialog(props) {
 function ViewMembers() {
   // const { username, bookId, bookName, sheetId, date } = useParams();
   const [open, setOpen] = useState(false);
-  console.log('open', open)
+
   return (
     <Box>
       <Button 
