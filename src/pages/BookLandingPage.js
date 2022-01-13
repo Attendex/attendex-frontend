@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import axios from 'axios';
+import { getToken } from '../utils/utils';
 
 // URL path would be /
 
@@ -13,13 +14,15 @@ function BookLandingPage() {
   
   useEffect(() => {
     // Get dates and redirect to latest date
-    const token = window.localStorage.getItem("token");
+    const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {
         if (res.data.length === 0) {
+          // get today's date
           const today = new Date();
           const formattedDate = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
+          
           // create sheet for today
           axios.post(`${process.env.REACT_APP_BACKEND_URL}/addsheet`,
             {"bookid": bookId, "date": formattedDate},
@@ -28,7 +31,6 @@ function BookLandingPage() {
               const sheetId = res.data.sheetID;
               navigate(`/${username}/${bookName}/${bookId}/${formattedDate}/${sheetId}`);
             })
-          // and navigate there
         } else {
           const date = res.data[0].date;
           const sheetId = res.data[0].sheetID;

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import jwt_decode from 'jwt-decode';
+import { getToken } from '../utils/utils';
 
 // URL path would be /
 
@@ -11,9 +12,9 @@ function LandingPage() {
   
   useEffect(() => {
     // Get token from localStorage
-    const token = window.localStorage.getItem("token");
+    const token = getToken();
     // if token not found, redirect to /signin
-    if (token === null || token === undefined) {
+    if (token === null) {
       navigate(`/signin`);
     } else {
       // if token found, get username from token and redirect to /:username

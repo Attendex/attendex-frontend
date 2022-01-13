@@ -3,13 +3,14 @@ import axios from 'axios';
 import { Typography, Box, Grid } from '@mui/material';
 import AttendanceBook from './AttendanceBook';
 import NewAttendanceBook from './NewAttendanceBook';
+import { getToken } from '../utils/utils';
 
 function MyAttendanceBooks() {
   const [attBooks, setAttBooks] = useState([]);
 
   const fetchAttBooks = () => {
      // Fetch all of user's attendance books
-    const token = window.localStorage.getItem("token");
+    const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getbook`,
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {

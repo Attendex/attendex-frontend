@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
+import { getToken } from '../utils/utils';
 
 function NewAttendanceBook(props) {
   const theme = useTheme();
@@ -10,7 +11,7 @@ function NewAttendanceBook(props) {
   const { onAdd } = props;
 
   const handleCreate = () => {
-    const token = window.localStorage.getItem("token");
+    const token = getToken();
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/addbook`,
       {"bookname": newBookName},
       { headers: {"Authorization" : `Bearer ${token}`}})

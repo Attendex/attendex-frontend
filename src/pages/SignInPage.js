@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, TextField, Typography, Box, Button } from '@mui/material';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { storeToken } from '../utils/utils';
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -10,17 +11,17 @@ function SignInPage() {
   const [password, setPassword] = useState('');
 
   const handleSignIn = () => {
-    // Make API call to sign in, returns jwt token {"userid": username, "password": password}
+    // Make API call to sign in, returns jwt token
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,
       {
         "userid": username, 
         "password": password,
       }).then(res => {
-        window.localStorage.setItem("token", res.data.accessToken);
+        storeToken(res.data.accessToken);  // Store jwt token in localStorage as token with expiry of 30mins
         const decoded = jwt_decode(res.data.accessToken);
         navigate(`/${decoded.userid}`);
       })
-    // Store jwt token in localStorage as token with expiry of 30mins
+
   };
 
   return (

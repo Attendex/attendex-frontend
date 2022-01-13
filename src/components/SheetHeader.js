@@ -5,6 +5,8 @@ import ConfirmationDialog from './ConfirmationDialog';
 import NewSheetDialog from './NewSheetDialog';
 import ViewMembers from '../components/ViewMembers';
 import axios from 'axios';
+import { getToken } from '../utils/utils';
+
 // Replace with payload from get all dates endpoint
 const dates = [
   {
@@ -35,7 +37,7 @@ function SheetHeader() {
 
   useEffect(() => {
     // Get dates and save into state
-    const token = window.localStorage.getItem("token");
+    const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {

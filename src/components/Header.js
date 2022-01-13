@@ -6,7 +6,7 @@ function Header(props) {
   const { username } = props;
 
   const handleSignOut = () => {
-    window.localStorage.removeItem("token");
+    localStorage.removeItem("token");
     navigate(`/signin`);
   };
 

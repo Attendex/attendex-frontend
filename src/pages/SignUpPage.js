@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, TextField, Typography, Box, Button } from '@mui/material';
 import axios from 'axios';
+import { storeToken } from '../utils/utils';
 
 function SignUpPage() {
   const [username, setUsername] = useState('');
@@ -8,16 +9,14 @@ function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = () => {
-    // Make API call to sign up {"userid": username, "password": password}
+    // Make API call to sign up 
     axios.post(`http://localhost:3000/signup`,
       {
         "userid": username, 
         "password": password,
       }).then(res => {
-        console.log('res.accessToken', res.accessToken)
-        window.localStorage.setItem("token", res.accessToken);
+        storeToken(res.accessToken) // Store jwt token into localStorage as token with expiry of 30mins
       })
-    // Store jwt token into localStorage as token with expiry of 30mins
   };
 
   return (
