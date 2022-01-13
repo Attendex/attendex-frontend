@@ -11,22 +11,27 @@ import { useState } from 'react';
 
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
-const memberAttendances = [
-  {
-    "memberName": "ryan",
-    "memberID": 1,
-    "attended": 0
-  },
-  {
-    "memberName": "siqi",
-    "memberID": 2,
-    "attended": 0
-  }
-];
-
 function AttendanceTable() {
   const theme = useTheme();
+  const [memberAttendances, setMemberAttendances] = useState([
+    {
+      "memberName": "ryan",
+      "memberID": 1,
+      "attended": 0
+    },
+    {
+      "memberName": "siqi",
+      "memberID": 2,
+      "attended": 0
+    }
+  ]);
   // const { username, bookId, bookName, sheetId, date } = useParams();
+
+  const onChange = (event, key) => {
+    const newMemberAttendances = [...memberAttendances] // creating a shallow copy of array to trigger change in state
+    newMemberAttendances[key].attended = event.target.checked ? 1 : 0;
+    setMemberAttendances(newMemberAttendances);
+  }
 
   return (
     <Box sx={{ maxWidth: '1000px', padding: '1rem', margin: '0 auto' }}>
@@ -42,9 +47,9 @@ function AttendanceTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {memberAttendances.map((memberAttendance) => (
+            {memberAttendances.map((memberAttendance, index) => (
               <TableRow
-                key={memberAttendance.memberID}
+                key={index}
                 sx={{ 
                   '&:last-child td, &:last-child th': { borderBottom: 0,},
                   '&:nth-of-type(odd)': {
@@ -57,7 +62,8 @@ function AttendanceTable() {
                 </TableCell>
                 <TableCell align="center">
                   <Checkbox
-                    defaultChecked
+                    checked={!!memberAttendances[index].attended}
+                    onChange={(event) => onChange(event, index)}
                     sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
                   />
                 </TableCell>

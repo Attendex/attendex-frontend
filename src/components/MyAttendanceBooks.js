@@ -26,7 +26,7 @@ function MyAttendanceBooks() {
     <Box sx={{ padding: '2rem 1rem', maxWidth: '1000px', margin: '0 auto'}}>
       <Typography variant="h4">My Attendance Books</Typography>
       <Grid container spacing={2} sx={{marginTop: '1rem'}}>
-        {attBooks.map((book) => (<AttendanceBook book={book} />))}
+        {attBooks.map((book) => (<AttendanceBook key={book.bookID} book={book} />))}
         <NewAttendanceBook />
       </Grid>
     </Box>

@@ -38,7 +38,7 @@ function SignInPage() {
             sx={{width: '90%'}}
             onChange={(event) => setPassword(event.target.value)}
           />
-          <Button variant="contained">Sign In</Button>
+          <Button variant="contained" href="/username">Sign In</Button>
         </Card>
         <Button variant="none" sx={{ margin:'1rem' }} href="/signup">Don't have an account? Sign up here</Button>
       </Box>

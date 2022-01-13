@@ -52,7 +52,7 @@ function SheetHeader() {
       <Grid container spacing={1}>
         <Grid item sm={6} xs={4}><ViewMembers /></Grid>
         <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}}>Delete Today's Sheet</Button></Grid>
-        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}}>Create New Sheet</Button></Grid>
+        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}}>Create Today's Sheet</Button></Grid>
       </Grid>
     </Stack>
   );
