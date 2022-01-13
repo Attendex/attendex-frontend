@@ -22,20 +22,21 @@ function AttendanceTable(props) {
   const { username, bookId, bookName, sheetId, date } = useParams();
 
   useEffect(() => {
-    // Fetch member attendances for this date
-    const token = getToken();
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
-      { headers: {"Authorization" : `Bearer ${token}`}})
-      .then(res => {
-        console.log(res);
-        const fetchedMemberAtts = res.data;
-        setMemberAtts(fetchedMemberAtts);
-      }).catch((error) => { 
-        if (error.response.status === 401) {
-          navigate('/signin');
-        }
-    })
-  });
+    if (!emptyTable) {
+      // Fetch member attendances for this date
+      const token = getToken();
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
+        { headers: {"Authorization" : `Bearer ${token}`}})
+        .then(res => {
+          const fetchedMemberAtts = res.data;
+          setMemberAtts(fetchedMemberAtts);
+        }).catch((error) => { 
+          if (error.response.status === 401) {
+            navigate('/signin');
+          }
+      })
+    }
+  }, []);
 
   const onChange = (event, key) => {
     const newMemberAtts = [...memberAtts] // creating a shallow copy of array to trigger change in state
@@ -57,7 +58,7 @@ function AttendanceTable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {emptyTable || memberAtts.length === 0 ? <TableRow><TableCell align="center" colSpan={2}>Add members above to begin</TableCell></TableRow>
+            {emptyTable || memberAtts.length === 0 ? <TableRow><TableCell align="center" colSpan={2}>Add members or create new sheet to begin :)</TableCell></TableRow>
             : memberAtts.map((memberAtt, index) => (
               <TableRow
                 key={index}

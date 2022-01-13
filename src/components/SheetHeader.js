@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Stack, Typography, Button, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import ConfirmationDialog from './ConfirmationDialog';
 import NewSheetDialog from './NewSheetDialog';
@@ -8,30 +7,10 @@ import ViewMembers from '../components/ViewMembers';
 import axios from 'axios';
 import { getToken } from '../utils/utils';
 
-// Replace with payload from get all dates endpoint
-const dates = [
-  {
-    "date": "11-01-2022",
-    "sheetId": "1",
-  },
-  {
-    "date": "09-01-2022",
-    "sheetId": "3",
-  },
-  {
-    "date": "2-01-2022",
-    "sheetId": "7",
-  },
-  {
-    "date": "11-12-2021",
-    "sheetId": "10",
-  }
-]
-
 function SheetHeader(props) {
   const navigate = useNavigate();
   const { withDateSelector } = props;
-  const { bookId, bookName, sheetId, date } = useParams();
+  const { username, bookId, bookName, sheetId, date } = useParams();
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
   // const [dateToCreate, setDateToCreate] = useState(null);
@@ -45,28 +24,26 @@ function SheetHeader(props) {
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {
         const dates = res.data;
-        setSelectedDate(dates[0].date);
+        console.log(date);
+        setSelectedDate(date);
         setDates(dates);
       }).catch((error) => { 
         if (error.response.status === 401) {
           navigate('/signin');
         }
     })
-  }, []);
+  }, [sheetId]);
 
   const handleSelectDate = (event) => {
+    console.log('event.target.value.date', event.target.value)
     setSelectedDate(event.target.value);
+
+    navigate(`/${username}/${bookName}/${bookId}/${selectedDate}/${event.target.value.sheetID}`);
   };
 
   const handleDelete = (isConfirmed) => {
     if (isConfirmed) {
       // Send API call to delete selectedDate with sheetID
-    }
-  }
-
-  const handleCreate = (isConfirmed) => {
-    if (isConfirmed) {
-      // Send API call to create new sheet with dateToCreate
     }
   }
 
@@ -102,7 +79,7 @@ function SheetHeader(props) {
       />
       <NewSheetDialog  
         open={openCreateConfirmation} 
-        onClose={(isConfirmed) => { setOpenCreateConfirmation(false); handleCreate(isConfirmed);}}
+        onClose={() => setOpenCreateConfirmation(false)}
       />
     </Stack>
   );

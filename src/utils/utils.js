@@ -22,3 +22,8 @@ export const getToken = () => {
   }
   return tokenWExpiry.value;
 }
+
+export const formatDate = (inputDate) => {
+  let date = new Date(inputDate);
+  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+}
