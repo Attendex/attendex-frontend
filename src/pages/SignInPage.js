@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, TextField, Typography, Box, Button } from '@mui/material';
-
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
 function SignInPage() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleSignIn = () => {
+    // Make API call to sign in, returns jwt token {"userid": username, "password": password}
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,
+      {
+        "userid": username, 
+        "password": password,
+      }).then(res => {
+        window.localStorage.setItem("token", res.data.accessToken);
+        const decoded = jwt_decode(res.data.accessToken);
+        navigate(`/${decoded.userid}`);
+      })
+    // Store jwt token in localStorage as token with expiry of 30mins
+  };
+
   return (
     <Box sx={{ height: '100vh', padding: '1rem' }}>
       <Box sx={{ position: 'relative', top: '20%' }}>
@@ -38,7 +56,7 @@ function SignInPage() {
             sx={{width: '90%'}}
             onChange={(event) => setPassword(event.target.value)}
           />
-          <Button variant="contained" href="/username">Sign In</Button>
+          <Button variant="contained" onClick={handleSignIn}>Sign In</Button>
         </Card>
         <Button variant="none" sx={{ margin:'1rem' }} href="/signup">Don't have an account? Sign up here</Button>
       </Box>

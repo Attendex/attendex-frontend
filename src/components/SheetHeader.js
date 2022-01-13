@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Stack, Typography, Button, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import ConfirmationDialog from './ConfirmationDialog';
 import NewSheetDialog from './NewSheetDialog';
 import ViewMembers from '../components/ViewMembers';
-
+import axios from 'axios';
 // Replace with payload from get all dates endpoint
 const dates = [
   {
@@ -26,11 +26,24 @@ const dates = [
 ]
 
 function SheetHeader() {
-  // const { username, bookId, bookName, sheetId, date } = useParams();
-  const [selectedDate, setSelectedDate] = useState(dates[0].date); //set default value as most recent date
+  const { bookId, bookName, sheetId, date } = useParams();
+  const [dates, setDates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
   // const [dateToCreate, setDateToCreate] = useState(null);
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);
   const [openCreateConfirmation, setOpenCreateConfirmation] = useState(false);
+
+  useEffect(() => {
+    // Get dates and save into state
+    const token = window.localStorage.getItem("token");
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
+      { headers: {"Authorization" : `Bearer ${token}`}})
+      .then(res => {
+        const dates = res.data;
+        setSelectedDate(dates[0].date);
+        setDates(dates);
+      })
+  }, []);
 
   const handleSelectDate = (event) => {
     setSelectedDate(event.target.value);
@@ -51,7 +64,7 @@ function SheetHeader() {
   return (
     <Stack sx={{padding: '1rem', maxWidth: '1000px', margin: '0 auto'}}>
       <Stack direction="row" justifyContent="space-between" sx={{margin: '1rem 0'}}>
-        <Typography variant="h4">Book name</Typography>
+        <Typography variant="h4">{bookName}</Typography>
         <FormControl>
           <InputLabel id="demo-simple-select-label">Date</InputLabel>
           <Select

@@ -1,9 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Button, Stack } from '@mui/material';
 
-// Replace with username route param
-const username = "lily"
+function Header(props) {
+  const navigate = useNavigate();
+  const { username } = props;
 
-function Header() {
+  const handleSignOut = () => {
+    window.localStorage.removeItem("token");
+    navigate(`/signin`);
+  };
+
   return (
     <Box sx={{ 
       padding: '1rem', 
@@ -19,7 +25,7 @@ function Header() {
         }}
       >
         <Typography variant="p">{username}</Typography>
-        <Button variant="contained" color="secondary" href="/signin">Sign Out</Button>
+        <Button variant="contained" color="secondary" onClick={handleSignOut}>Sign Out</Button>
       </Stack>
     </Box>
   );

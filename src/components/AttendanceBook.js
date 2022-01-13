@@ -1,15 +1,18 @@
-import { Typography, Box, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { Typography, Box, Grid } from '@mui/material';
 
 function AttendanceBook(props) {
+  const { book } = props;
   const theme = useTheme();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const { username } = useParams();
 
   return (
     <Grid item xs={12} sm={4}>
       <Box
-        onClick={()=> navigate('/sheet')}
+        onClick={()=> navigate(`/${username}/${book.bookName}/${book.bookID}`)}
         sx={{
           backgroundColor: theme.palette.primary.light,
           display: 'flex',
@@ -26,7 +29,7 @@ function AttendanceBook(props) {
          },
         }}
       >
-        <Typography variant="p">{props.book.bookName}</Typography>
+        <Typography variant="p">{book.bookName}</Typography>
       </Box>
     </Grid>
   );

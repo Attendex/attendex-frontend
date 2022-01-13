@@ -8,11 +8,11 @@ import Attendances from '../components/Attendances.js';
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
 function SheetPage() {
-  // const { username, bookId, bookName, sheetId, date } = useParams();
+  const { username } = useParams();
 
   return (
     <Box sx={{ height: '100%' }}>
-      <Header />
+      <Header username={username}/>
       <SheetHeader />
       <Attendances />
     </Box>
