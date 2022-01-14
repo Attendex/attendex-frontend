@@ -1,4 +1,4 @@
-const tokenExpiryMin = 30;
+const tokenExpiryMin = 180;
 const tokenExpiryMs = tokenExpiryMin * 60000;
 
 export const storeToken = (token) => {

@@ -13,7 +13,6 @@ function SheetHeader(props) {
   const { username, bookId, bookName, sheetId, date } = useParams();
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
-  // const [dateToCreate, setDateToCreate] = useState(null);
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);
   const [openDelSuccess, setOpenDelSuccess] = useState(false);
   const [openCreateConfirmation, setOpenCreateConfirmation] = useState(false);

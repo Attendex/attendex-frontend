@@ -1,6 +1,8 @@
 import { Collapse, Alert, Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux'
+import membersSlice, { update } from '../store/membersSlice';
 import ConfirmationDialog from './ConfirmationDialog';
 import axios from 'axios';
 import { getToken } from '../utils/utils';
@@ -8,29 +10,36 @@ import { getToken } from '../utils/utils';
 
 function MemberDialog(props) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { onClose, open } = props;
-  const { username, bookId, bookName, sheetId, date } = useParams();
+  const { username, bookId, bookName, date, sheetId } = useParams();
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [newMember, setNewMember] = useState(null);
-  const [memberToDelete, setMemberToDelete] = useState(null);
-  const [tempCounter, setCounter] = useState(3);
-  // Replace with payload from get all members from book
+  const [memberIdToDelete, setMemberIdToDelete] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [members, setMembers] = useState([]);
+  const [openDelSuccess, setOpenDelSuccess] = useState(false);
 
   useEffect(() => {
-    // Get dates and save into state
+    getMembers();
+  }, [bookId]);
+
+  const getMembers = () => {
+    // Get members and save into state
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getmember?bookid=${bookId}`,
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {
-        const members = res.data;
+        const members = [...res.data];
+        console.log('fetched members', members);
         setMembers(members);
+        dispatch(update(members));
       }).catch((error) => { 
         if (error.response.status === 401) {
           navigate('/signin');
         }
     })
-  }, [bookId]);
+  };
 
   const handleSave = (isConfirmed) => {
     if (isConfirmed) {
@@ -42,19 +51,39 @@ function MemberDialog(props) {
   };
 
   const addMember = () => {
-    let newMembers = members;
-    newMembers.push({"memberName": newMember, "memberID": tempCounter});
-    setMembers(newMembers);
-    setCounter(tempCounter+1);
-    setNewMember('');
     // API call to add member
+    const token = getToken();
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addmember`,
+      { "bookid": bookId, "name": newMember },
+      { headers: {"Authorization" : `Bearer ${token}`}})
+      .then(res => {
+        setNewMember('');
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        } else if (error.response.status === 409) {
+          setErrorMsg("Cannot add duplicate member names!");
+        }
+    });
+    getMembers();
   };
 
   const handleDelete = (isConfirmed) => {
     if (isConfirmed) {
-      setMembers((members) => members.filter((member) => member.memberID !== memberToDelete.memberID));
-      // API call to delete member
-      setMemberToDelete(null);
+      // Send API call to delete member with sheetID
+      const token = getToken();
+
+      axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletemember`,
+        { headers: {"Authorization" : `Bearer ${token}`}, data: { "memberid": memberIdToDelete }})
+        .then(res => {
+          setOpenDelSuccess(true);
+        }).catch((error) => { 
+          if (error.response.status === 401) {
+            navigate('/signin');
+          }
+      })
+      setMemberIdToDelete(null);
+      getMembers();
     } else {
       onClose();
     }
@@ -67,6 +96,7 @@ function MemberDialog(props) {
         <Stack direction="row">
           <TextField
             autoFocus
+            fullWidth
             value={newMember}
             label="New member name"
             type="text"
@@ -80,9 +110,15 @@ function MemberDialog(props) {
           <Chip
             key={member.memberID}
             label={member.memberName}
-            onDelete={() => {setOpenConfirmation(true); setMemberToDelete(member);}}
+            onDelete={() => {setOpenConfirmation(true); setMemberIdToDelete(member.memberID);}}
           />
         ))}
+        <Collapse in={!!errorMsg} sx={{marginTop: '1rem'}}>
+          <Alert severity="error" onClose={() => {setErrorMsg(null);}}>{errorMsg}</Alert>
+        </Collapse>
+        <Collapse in={openDelSuccess} sx={{marginTop: '1rem'}}>
+          <Alert severity="success" onClose={() => {setOpenDelSuccess(false);}}>Member successfully deleted!</Alert>
+        </Collapse>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Done</Button>

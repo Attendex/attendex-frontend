@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
+import { update } from '../store/membersSlice';
 import { Box, Checkbox } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,6 +18,7 @@ import axios from 'axios';
 
 function AttendanceTable(props) {
   const navigate = useNavigate();
+  const members = useSelector((state) => state.members.members);
   const { emptyTable } = props;
   const theme = useTheme();
   const [memberAtts, setMemberAtts] = useState([]);
@@ -25,18 +28,18 @@ function AttendanceTable(props) {
     if (!emptyTable) {
       // Fetch member attendances for this date
       const token = getToken();
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
-        { headers: {"Authorization" : `Bearer ${token}`}})
-        .then(res => {
-          const fetchedMemberAtts = res.data;
-          setMemberAtts(fetchedMemberAtts);
-        }).catch((error) => { 
-          if (error.response.status === 401) {
-            navigate('/signin');
-          }
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
+      { headers: {"Authorization" : `Bearer ${token}`}})
+      .then(res => {
+        const fetchedMemberAtts = res.data;
+        setMemberAtts(fetchedMemberAtts);
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
       })
     }
-  }, []);
+  }, [members]);
 
   const onChange = (event, key) => {
     const newMemberAtts = [...memberAtts] // creating a shallow copy of array to trigger change in state
