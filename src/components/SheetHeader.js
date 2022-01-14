@@ -35,10 +35,14 @@ function SheetHeader(props) {
   }, [sheetId]);
 
   const handleSelectDate = (event) => {
-    console.log('event.target.value.date', event.target.value)
-    setSelectedDate(event.target.value);
-
-    navigate(`/${username}/${bookName}/${bookId}/${selectedDate}/${event.target.value.sheetID}`);
+    const dateStr = event.target.value;
+    setSelectedDate(dateStr);
+    dates.forEach((date) => {
+      if (date.date === dateStr) {
+        navigate(`/${username}/${bookName}/${bookId}/${dateStr}/${date.sheetID}`);
+      }
+    })
+    
   };
 
   const handleDelete = (isConfirmed) => {
