@@ -1,26 +1,36 @@
-import { Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { Collapse, Alert, Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import ConfirmationDialog from './ConfirmationDialog';
+import axios from 'axios';
+import { getToken } from '../utils/utils';
 
 
 function MemberDialog(props) {
+  const navigate = useNavigate();
   const { onClose, open } = props;
+  const { username, bookId, bookName, sheetId, date } = useParams();
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [newMember, setNewMember] = useState(null);
   const [memberToDelete, setMemberToDelete] = useState(null);
   const [tempCounter, setCounter] = useState(3);
   // Replace with payload from get all members from book
-  const [members, setMembers] = useState([
-    {
-      "memberName": "ryan",
-      "memberID": 1
-    },
-    {
-      "memberName": "siqi",
-      "memberID": 2
-    }
-  ]);
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    // Get dates and save into state
+    const token = getToken();
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/getmember?bookid=${bookId}`,
+      { headers: {"Authorization" : `Bearer ${token}`}})
+      .then(res => {
+        const members = res.data;
+        setMembers(members);
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    })
+  }, [bookId]);
 
   const handleSave = (isConfirmed) => {
     if (isConfirmed) {
