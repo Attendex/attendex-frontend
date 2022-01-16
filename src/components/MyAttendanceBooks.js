@@ -1,19 +1,24 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Box, Grid, Collapse, Alert } from '@mui/material';
+import { Typography, Box, Grid } from '@mui/material';
 import { getToken } from '../utils/utils';
 import AttendanceBook from './AttendanceBook';
 import NewAttendanceBook from './NewAttendanceBook';
+import { alertSeverity } from './AlertFeedback';
+import AlertFeedback from './AlertFeedback';
 
 function MyAttendanceBooks() {
   const navigate = useNavigate();
-  
+
   const [successMsg, setSuccessMsg] = useState(null);
   const [attBooks, setAttBooks] = useState([]);
 
+  useEffect(() => {
+    fetchAttBooks();
+  }, []); 
+  
   const fetchAttBooks = () => {
-    // Fetch all of user's attendance books
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getbook`,
       { headers: {"Authorization" : `Bearer ${token}`}})
@@ -26,25 +31,29 @@ function MyAttendanceBooks() {
     })
   }
 
-  useEffect(() => {
-    fetchAttBooks();
-  }, []); 
+  const handleAddNewAttBook = () => {
+    fetchAttBooks(); 
+    setSuccessMsg("Book added successfully!");
+  };
+
+  const renderAttBooks = () => {
+    return attBooks.map((book) => (
+      <AttendanceBook 
+        key={book.bookID} 
+        book={book} 
+        onDeleteBook={() => {fetchAttBooks(); setSuccessMsg("Book deleted successfully!");}}
+      />
+    ));
+  };
 
   return (
     <Box sx={{ padding: '2rem 1rem', maxWidth: '1000px', margin: '0 auto'}}>
       <Typography variant="h4">My Attendance Books</Typography>
       <Grid container spacing={2} sx={{marginTop: '1rem'}}>
-        {attBooks.map((book) => 
-          (<AttendanceBook 
-            key={book.bookID} 
-            book={book} 
-            onDeleteBook={() => {fetchAttBooks(); setSuccessMsg("Book deleted successfully!");}}
-          />))}
-        <NewAttendanceBook onAdd={() => {fetchAttBooks(); setSuccessMsg("Book added successfully!");}} />
+        {renderAttBooks()}
+        <NewAttendanceBook onAdd={handleAddNewAttBook} />
       </Grid>
-      <Collapse in={!!successMsg} sx={{marginTop: '1rem'}}>
-        <Alert severity="success" onClose={() => {setSuccessMsg(null);}}>{successMsg}</Alert>
-      </Collapse>
+      <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
     </Box>
   );
 }

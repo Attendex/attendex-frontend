@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Collapse, Card, TextField, Typography, Box, Button } from '@mui/material';
 import { storeToken } from '../utils/utils';
+import { alertSeverity } from '../components/AlertFeedback';
+import AlertFeedback from '../components/AlertFeedback';
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -72,9 +74,7 @@ function SignUpPage() {
             onChange={(event) => setConfirmPassword(event.target.value)} 
           />
           <Button variant="contained" onClick={handleSignUp}>Sign Up</Button>
-          <Collapse in={!!warnMsg} sx={{marginTop: '1rem'}}>
-            <Alert severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
-          </Collapse>
+          <AlertFeedback msg={warnMsg} severity={alertSeverity.WARN} onClose={() => setWarnMsg(null)} />
         </Card>
         <Button variant="none" sx={ {margin:'1rem' }} href="/signin">Already have an account? Sign in here</Button>
       </Box>

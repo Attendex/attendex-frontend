@@ -10,22 +10,38 @@ import ConfirmationDialog from './ConfirmationDialog';
 
 function AttendanceBook(props) {
   const { book, onDeleteBook } = props;
-  
+
   const theme = useTheme();
   const navigate = useNavigate();
   const { username } = useParams();
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const [openDelConfirmation, setOpenDelConfirmation] = useState(false);
+  const [moreAnchorEl, setMoreAnchorEl] = useState(null);
+  const openMore = Boolean(moreAnchorEl);
+  const [openDelConfirm, setOpenDelConfirm] = useState(false);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleAttBookClick = () => {
+    navigate(`/${username}/${book.bookName}/${book.bookID}`);
+  };
+
+  const handleMoreClick = (event) => {
+    setMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMoreClose = () => {
+    setMoreAnchorEl(null);
+  };
+
+  const handleDeleteClick = () => {
+    setOpenDelConfirm(true);
+  };
+
+  const handleDelConfirmClose = (isConfirmed) => {
+    setOpenDelConfirm(false); 
+    handleDeleteBook(isConfirmed);
   };
 
   const handleDeleteBook = (isConfirmed) => {
     if (isConfirmed) {
-      // Send API call to delete book with bookId
       const token = getToken();
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletebook`,
         { headers: {"Authorization" : `Bearer ${token}`}, data: { "bookid": book.bookID }})
@@ -37,7 +53,7 @@ function AttendanceBook(props) {
           }
       })
     }
-    setAnchorEl(null);
+    setMoreAnchorEl(null);
   };
 
   return (
@@ -65,28 +81,28 @@ function AttendanceBook(props) {
             display: 'flex',
             alignItems: 'flex-end',
           }} 
-          onClick={()=> navigate(`/${username}/${book.bookName}/${book.bookID}`)}
+          onClick={handleAttBookClick}
         >
           {book.bookName}
         </Typography>
-        <MoreVertIcon sx={{color:'grey'}} onClick={handleClick}/>
+        <MoreVertIcon sx={{color:'grey'}} onClick={handleMoreClick}/>
         <Menu
           id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => setAnchorEl(null)}
+          anchorEl={moreAnchorEl}
+          open={openMore}
+          onClose={handleMoreClose}
           MenuListProps={{
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={() => {setOpenDelConfirmation(true);}}>
+          <MenuItem onClick={handleDeleteClick}>
             <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
             <ListItemText>Delete Book</ListItemText>
           </MenuItem>
         </Menu>
         <ConfirmationDialog 
-          open={openDelConfirmation} 
-          onClose={(isConfirmed) => { setOpenDelConfirmation(false); handleDeleteBook(isConfirmed);}}
+          open={openDelConfirm} 
+          onClose={(isConfirmed) => handleDelConfirmClose(isConfirmed)}
           title="Delete book"
           text="Please note that ALL ATTENDANCE DATA of deleted book will be permanently deleted. Proceed to delete book?"
           cancelButtonText="Cancel"

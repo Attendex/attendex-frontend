@@ -6,6 +6,8 @@ import { Collapse, Alert, Stack, Box, Button, Chip, DialogContentText, DialogAct
 import { update } from '../store/membersSlice';
 import { getToken } from '../utils/utils';
 import ConfirmationDialog from './ConfirmationDialog';
+import { alertSeverity } from './AlertFeedback';
+import AlertFeedback from './AlertFeedback';
 
 function MemberDialog(props) {
   const { onClose, open } = props;
@@ -21,13 +23,12 @@ function MemberDialog(props) {
   const [successMsg, setSuccessMsg] = useState(null);
   const [warnMsg, setWarnMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  
+
   useEffect(() => {
     getMembers();
   }, [bookId]);
 
   const getMembers = () => {
-    // Get members and save into state
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getmember?bookid=${bookId}`,
       { headers: {"Authorization" : `Bearer ${token}`}})
@@ -47,7 +48,6 @@ function MemberDialog(props) {
     if (newMember.length > 45) {
       setWarnMsg("Member names cannot be longer than 45 characters.");
     }
-    // API call to add member
     const token = getToken();
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/addmember`,
       { "bookid": bookId, "name": newMember },
@@ -67,7 +67,6 @@ function MemberDialog(props) {
 
   const handleDelete = (isConfirmed) => {
     if (isConfirmed) {
-      // Send API call to delete member with sheetID
       const token = getToken();
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletemember`,
         { headers: {"Authorization" : `Bearer ${token}`}, data: { "memberid": memberIdToDelete }})
@@ -109,15 +108,9 @@ function MemberDialog(props) {
             onDelete={() => {setOpenConfirmation(true); setMemberIdToDelete(member.memberID);}}
           />
         ))}
-        <Collapse in={!!warnMsg}>
-          <Alert sx={{marginTop: '1rem'}} severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
-        </Collapse>
-        <Collapse in={!!errorMsg}>
-          <Alert sx={{marginTop: '1rem'}} severity="error" onClose={() => {setErrorMsg(null);}}>{errorMsg}</Alert>
-        </Collapse>
-        <Collapse in={!!successMsg}>
-          <Alert sx={{marginTop: '1rem'}} severity="success" onClose={() => {setSuccessMsg(null);}}>{successMsg}</Alert>
-        </Collapse>
+        <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
+        <AlertFeedback msg={warnMsg} severity={alertSeverity.WARN} onClose={() => setWarnMsg(null)} />
+        <AlertFeedback msg={errorMsg} severity={alertSeverity.ERROR} onClose={() => setErrorMsg(null)} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Done</Button>

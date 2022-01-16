@@ -2,8 +2,10 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import { Alert, Collapse, TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { getToken } from '../utils/utils';
+import { alertSeverity } from './AlertFeedback';
+import AlertFeedback from './AlertFeedback';
 
 function NewAttendanceBook(props) {
   const { onAdd } = props;
@@ -69,9 +71,7 @@ function NewAttendanceBook(props) {
             variant="standard"
             onChange={(event) => setNewBookName(event.target.value)}
           />
-          <Collapse in={!!warnMsg} sx={{marginTop: '1rem'}}>
-            <Alert severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
-          </Collapse>
+          <AlertFeedback msg={warnMsg} severity={alertSeverity.WARN} onClose={() => setWarnMsg(null)} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => {setOpen(false); setWarnMsg(null);}}>Cancel</Button>

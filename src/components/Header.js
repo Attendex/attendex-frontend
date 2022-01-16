@@ -14,12 +14,12 @@ function Header(props) {
   
   const navigate = useNavigate();
   
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openUserMenu = Boolean(anchorEl);
-  const [openDelConfirmation, setOpenDelConfirmation] = useState(false);
+  const [userAnchorEl, setUserAnchorEl] = useState(null);
+  const openUserMenu = Boolean(userAnchorEl);
+  const [openDelConfirm, setOpenDelConfirm] = useState(false);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleUserClick = (event) => {
+    setUserAnchorEl(event.currentTarget);
   };
 
   const handleSignOut = () => {
@@ -27,22 +27,30 @@ function Header(props) {
     navigate(`/signin`);
   };
 
+  const handleDelConfirmClose = (isConfirmed) => {
+    setOpenDelConfirm(false); 
+    handleDeleteAccount(isConfirmed);
+  };
+
   const handleDeleteAccount = (isConfirmed) => {
     if (isConfirmed) {
-      // Send API call to delete member
       const token = getToken();
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deleteaccount`,
-        { headers: {"Authorization" : `Bearer ${token}`}})
+        { 
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
         .then(res => {
-          console.log('delete account success')
           navigate('/signin');
-        }).catch((error) => { 
+        })
+        .catch((error) => { 
           if (error.response.status === 401) {
             navigate('/signin');
           }
-      })
+        });
     }
-    setAnchorEl(null);
+    setUserAnchorEl(null);
   };
 
   return (
@@ -62,27 +70,24 @@ function Header(props) {
         <Typography variant="p">{username}</Typography>
         <Stack direction="row" spacing={2}>
           <HomeIcon color="action" onClick={() => navigate(`/${username}`)}/>
-          <ManageAccountsIcon color="action" onClick={handleClick}/>
+          <ManageAccountsIcon color="action" onClick={handleUserClick}/>
           <Menu
-            anchorEl={anchorEl}
+            anchorEl={userAnchorEl}
             open={openUserMenu}
-            onClose={() => setAnchorEl(null)}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
+            onClose={() => setUserAnchorEl(null)}
           >
             <MenuItem onClick={handleSignOut}>
               <ListItemIcon><LogoutIcon color="action" /></ListItemIcon>
               <ListItemText>Sign Out</ListItemText>
             </MenuItem>
-            <MenuItem onClick={() => {setOpenDelConfirmation(true);}}>
+            <MenuItem onClick={() => setOpenDelConfirm(true)}>
               <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
               <ListItemText>Delete account</ListItemText>
             </MenuItem>
           </Menu>
           <ConfirmationDialog 
-            open={openDelConfirmation} 
-            onClose={(isConfirmed) => { setOpenDelConfirmation(false); handleDeleteAccount(isConfirmed);}}
+            open={openDelConfirm} 
+            onClose={(isConfirmed) => handleDelConfirmClose(isConfirmed)}
             title="Delete account"
             text="Please note that ALL ATTENDANCE DATA of books in this account will be permanently deleted. Proceed to delete account?"
             cancelButtonText="Cancel"

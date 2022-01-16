@@ -6,6 +6,8 @@ import { getToken } from '../utils/utils';
 import ConfirmationDialog from './ConfirmationDialog';
 import NewSheetDialog from './NewSheetDialog';
 import ViewMembers from '../components/ViewMembers';
+import { alertSeverity } from './AlertFeedback';
+import AlertFeedback from './AlertFeedback';
 
 function SheetHeader(props) {
   const { withDateSelector } = props;
@@ -16,7 +18,7 @@ function SheetHeader(props) {
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);
-  const [openDelSuccess, setOpenDelSuccess] = useState(false);
+  const [successMsg, setSuccessMsg] = useState(null);
   const [openCreateConfirmation, setOpenCreateConfirmation] = useState(false);
 
   useEffect(() => {
@@ -24,7 +26,6 @@ function SheetHeader(props) {
   }, [sheetId]);
 
   const fetchDates = () => {
-    // Get dates and save into state
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
       { headers: {"Authorization" : `Bearer ${token}`}})
@@ -57,7 +58,7 @@ function SheetHeader(props) {
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletesheet`,
         { headers: {"Authorization" : `Bearer ${token}`}, data: { "sheetid": sheetId }})
         .then(res => {
-          setOpenDelSuccess(true);
+          setSuccessMsg("Sheet successfully deleted!");
           navigate(`/${username}/${bookName}/${bookId}`)
         }).catch((error) => { 
           if (error.response.status === 401) {
@@ -69,9 +70,7 @@ function SheetHeader(props) {
 
   return (
     <Stack sx={{padding: '1rem', maxWidth: '1000px', margin: '0 auto'}}>
-      <Collapse in={openDelSuccess}>
-        <Alert severity="success" onClose={() => {setOpenDelSuccess(false);}}>Sheet successfully deleted!</Alert>
-      </Collapse>
+      <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
       <Stack direction="row" justifyContent="space-between" sx={{margin: '1rem 0'}}>
         <Typography variant="h4">{bookName}</Typography>
         <FormControl>
@@ -89,8 +88,25 @@ function SheetHeader(props) {
       </Stack>
       <Grid container spacing={1}>
         <Grid item sm={6} xs={4}><ViewMembers /></Grid>
-        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenDelConfirmation(true)} disabled={!withDateSelector}>Delete Current Sheet</Button></Grid>
-        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenCreateConfirmation(true)}>Create New Sheet</Button></Grid>
+        <Grid item sm={3} xs={4}>
+          <Button 
+            variant="contained" 
+            sx={{height: '100%', width: '100%'}} 
+            onClick={() => setOpenDelConfirmation(true)} 
+            disabled={!withDateSelector}
+          >
+            Delete Current Sheet
+          </Button>
+        </Grid>
+        <Grid item sm={3} xs={4}>
+          <Button 
+            variant="contained" 
+            sx={{height: '100%', width: '100%'}} 
+            onClick={() => setOpenCreateConfirmation(true)}
+          >
+            Create New Sheet
+          </Button>
+        </Grid>
       </Grid>
       <ConfirmationDialog 
         open={openDelConfirmation} 
