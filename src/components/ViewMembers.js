@@ -1,25 +1,24 @@
-import { Collapse, Alert, Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
+import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import membersSlice, { update } from '../store/membersSlice';
-import ConfirmationDialog from './ConfirmationDialog';
-import axios from 'axios';
+import { Collapse, Alert, Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
+import { update } from '../store/membersSlice';
 import { getToken } from '../utils/utils';
-
+import ConfirmationDialog from './ConfirmationDialog';
 
 function MemberDialog(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { onClose, open } = props;
-  const { username, bookId, bookName, date, sheetId } = useParams();
+  const { bookId } = useParams();
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [newMember, setNewMember] = useState('');
   const [memberIdToDelete, setMemberIdToDelete] = useState(null);
   const [warnMsg, setWarnMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [members, setMembers] = useState([]);
-  const [openDelSuccess, setOpenDelSuccess] = useState(false);
+  const [successMsg, setSuccessMsg] = useState(null);
 
   useEffect(() => {
     getMembers();
@@ -52,6 +51,7 @@ function MemberDialog(props) {
       { "bookid": bookId, "name": newMember },
       { headers: {"Authorization" : `Bearer ${token}`}})
       .then(res => {
+        setSuccessMsg("Member added successfully!");
         setNewMember('');
       }).catch((error) => { 
         if (error.response.status === 401) {
@@ -70,7 +70,7 @@ function MemberDialog(props) {
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletemember`,
         { headers: {"Authorization" : `Bearer ${token}`}, data: { "memberid": memberIdToDelete }})
         .then(res => {
-          setOpenDelSuccess(true);
+          setSuccessMsg("Member deleted successfully!");
         }).catch((error) => { 
           if (error.response.status === 401) {
             navigate('/signin');
@@ -107,14 +107,14 @@ function MemberDialog(props) {
             onDelete={() => {setOpenConfirmation(true); setMemberIdToDelete(member.memberID);}}
           />
         ))}
-        <Collapse in={!!warnMsg} sx={{marginTop: '1rem'}}>
-          <Alert severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
+        <Collapse in={!!warnMsg}>
+          <Alert sx={{marginTop: '1rem'}} severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
         </Collapse>
-        <Collapse in={!!errorMsg} sx={{marginTop: '1rem'}}>
-          <Alert severity="error" onClose={() => {setErrorMsg(null);}}>{errorMsg}</Alert>
+        <Collapse in={!!errorMsg}>
+          <Alert sx={{marginTop: '1rem'}} severity="error" onClose={() => {setErrorMsg(null);}}>{errorMsg}</Alert>
         </Collapse>
-        <Collapse in={openDelSuccess} sx={{marginTop: '1rem'}}>
-          <Alert severity="success" onClose={() => {setOpenDelSuccess(false);}}>Member successfully deleted!</Alert>
+        <Collapse in={!!successMsg}>
+          <Alert sx={{marginTop: '1rem'}} severity="success" onClose={() => {setSuccessMsg(null);}}>{successMsg}</Alert>
         </Collapse>
       </DialogContent>
       <DialogActions>

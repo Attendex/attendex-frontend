@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Stack, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
@@ -5,9 +6,8 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
-import ConfirmationDialog from './ConfirmationDialog';
 import { getToken } from '../utils/utils';
-import axios from 'axios';
+import ConfirmationDialog from './ConfirmationDialog';
 
 function Header(props) {
   const navigate = useNavigate();

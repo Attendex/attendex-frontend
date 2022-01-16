@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Alert, Collapse, Card, TextField, Typography, Box, Button } from '@mui/material';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 import { storeToken } from '../utils/utils';
 
 function SignUpPage() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -19,7 +22,9 @@ function SignUpPage() {
         "userid": username, 
         "password": password,
       }).then(res => {
-        storeToken(res.accessToken) // Store jwt token into localStorage as token with expiry of 30mins
+        storeToken(res.data.accessToken); // Store jwt token into localStorage as token with expiry of 30mins
+        const decoded = jwt_decode(res.data.accessToken);
+        navigate(`/${decoded.userid}`);
       })
     }
   };

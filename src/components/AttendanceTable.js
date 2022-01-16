@@ -1,18 +1,10 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
-import { update } from '../store/membersSlice';
-import { Box, Checkbox } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { Box, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { getToken } from '../utils/utils';
-import axios from 'axios';
 
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
@@ -22,7 +14,7 @@ function AttendanceTable(props) {
   const { emptyTable } = props;
   const theme = useTheme();
   const [memberAtts, setMemberAtts] = useState([]);
-  const { username, bookId, bookName, sheetId, date } = useParams();
+  const { sheetId } = useParams();
 
   useEffect(() => {
     if (!emptyTable) {

@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { getToken } from '../utils/utils';
 import Header from '../components/Header';
 import SheetHeader from '../components/SheetHeader';
@@ -31,7 +29,7 @@ function BookLandingPage() {
           navigate('/signin');
         }
     })
-  }, []);
+  }, [username, bookName, bookId]);
 
   return (
     <Box sx={{ height: '100%' }}>

@@ -1,8 +1,7 @@
+import jwt_decode from 'jwt-decode';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import jwt_decode from 'jwt-decode';
+import { Box, CircularProgress } from '@mui/material';
 import { getToken } from '../utils/utils';
 
 // URL path would be /
