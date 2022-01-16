@@ -10,8 +10,10 @@ import { getToken } from '../utils/utils';
 import ConfirmationDialog from './ConfirmationDialog';
 
 function Header(props) {
-  const navigate = useNavigate();
   const { username } = props;
+  
+  const navigate = useNavigate();
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const openUserMenu = Boolean(anchorEl);
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);

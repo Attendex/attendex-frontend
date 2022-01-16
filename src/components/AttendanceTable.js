@@ -9,12 +9,14 @@ import { getToken } from '../utils/utils';
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
 function AttendanceTable(props) {
-  const navigate = useNavigate();
-  const members = useSelector((state) => state.members.members);
   const { emptyTable } = props;
+  
+  const navigate = useNavigate();
   const theme = useTheme();
-  const [memberAtts, setMemberAtts] = useState([]);
   const { sheetId } = useParams();
+  const members = useSelector((state) => state.members.members);
+  
+  const [memberAtts, setMemberAtts] = useState([]);
 
   useEffect(() => {
     if (!emptyTable) {

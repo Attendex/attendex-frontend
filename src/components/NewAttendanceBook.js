@@ -6,11 +6,13 @@ import { Alert, Collapse, TextField, Typography, Box, Button, Grid, Dialog, Dial
 import { getToken } from '../utils/utils';
 
 function NewAttendanceBook(props) {
+  const { onAdd } = props;
+  
   const navigate = useNavigate();
   const theme = useTheme();
+
   const [open, setOpen] = useState(false);
   const [newBookName, setNewBookName] = useState('');
-  const { onAdd } = props;
   const [warnMsg, setWarnMsg] = useState(null);
 
   const handleCreate = () => {

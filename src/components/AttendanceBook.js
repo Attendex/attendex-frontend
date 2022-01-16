@@ -10,9 +10,11 @@ import ConfirmationDialog from './ConfirmationDialog';
 
 function AttendanceBook(props) {
   const { book, onDeleteBook } = props;
+  
   const theme = useTheme();
   const navigate = useNavigate();
   const { username } = useParams();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);

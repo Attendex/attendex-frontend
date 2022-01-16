@@ -8,9 +8,11 @@ import NewSheetDialog from './NewSheetDialog';
 import ViewMembers from '../components/ViewMembers';
 
 function SheetHeader(props) {
-  const navigate = useNavigate();
   const { withDateSelector } = props;
+  
+  const navigate = useNavigate();
   const { username, bookId, bookName, sheetId, date } = useParams();
+  
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);

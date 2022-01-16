@@ -8,18 +8,20 @@ import { getToken } from '../utils/utils';
 import ConfirmationDialog from './ConfirmationDialog';
 
 function MemberDialog(props) {
+  const { onClose, open } = props;
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { onClose, open } = props;
   const { bookId } = useParams();
+
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [newMember, setNewMember] = useState('');
   const [memberIdToDelete, setMemberIdToDelete] = useState(null);
-  const [warnMsg, setWarnMsg] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [members, setMembers] = useState([]);
   const [successMsg, setSuccessMsg] = useState(null);
-
+  const [warnMsg, setWarnMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  
   useEffect(() => {
     getMembers();
   }, [bookId]);

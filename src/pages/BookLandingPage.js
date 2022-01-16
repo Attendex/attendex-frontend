@@ -10,8 +10,8 @@ import Attendances from '../components/Attendances';
 // URL path would be /
 
 function BookLandingPage() {
-  const { username, bookName, bookId } = useParams();
   const navigate = useNavigate();
+  const { username, bookName, bookId } = useParams();
   
   useEffect(() => {
     // Get dates and redirect to latest date
