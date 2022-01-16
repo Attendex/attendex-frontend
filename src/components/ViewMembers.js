@@ -41,15 +41,6 @@ function MemberDialog(props) {
     })
   };
 
-  const handleSave = (isConfirmed) => {
-    if (isConfirmed) {
-      // TODO: call API to update member data
-      onClose()
-    } else {
-      onClose()
-    }
-  };
-
   const addMember = () => {
     // API call to add member
     const token = getToken();
@@ -72,7 +63,6 @@ function MemberDialog(props) {
     if (isConfirmed) {
       // Send API call to delete member with sheetID
       const token = getToken();
-
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletemember`,
         { headers: {"Authorization" : `Bearer ${token}`}, data: { "memberid": memberIdToDelete }})
         .then(res => {
