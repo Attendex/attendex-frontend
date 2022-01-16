@@ -1,8 +1,9 @@
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Collapse, Card, TextField, Typography, Box, Button } from '@mui/material';
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
 import { storeToken } from '../utils/utils';
 
 function SignUpPage() {

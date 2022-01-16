@@ -12,7 +12,7 @@ function SheetHeader(props) {
   
   const navigate = useNavigate();
   const { username, bookId, bookName, sheetId, date } = useParams();
-  
+
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(''); //set default value as most recent date
   const [openDelConfirmation, setOpenDelConfirmation] = useState(false);
@@ -20,6 +20,10 @@ function SheetHeader(props) {
   const [openCreateConfirmation, setOpenCreateConfirmation] = useState(false);
 
   useEffect(() => {
+    fetchDates();
+  }, [sheetId]);
+
+  const fetchDates = () => {
     // Get dates and save into state
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
@@ -33,7 +37,7 @@ function SheetHeader(props) {
           navigate('/signin');
         }
     })
-  }, [sheetId]);
+  };
 
   const handleSelectDate = (event) => {
     const dateStr = event.target.value;

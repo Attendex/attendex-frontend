@@ -32,7 +32,6 @@ function NewAttendanceBook(props) {
           }
       });
     }
-    
   }
 
   return (

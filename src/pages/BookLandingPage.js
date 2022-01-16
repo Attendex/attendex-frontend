@@ -14,6 +14,10 @@ function BookLandingPage() {
   const { username, bookName, bookId } = useParams();
   
   useEffect(() => {
+    fetchDates();
+  }, [username, bookName, bookId]);
+
+  const fetchDates = () => {
     // Get dates and redirect to latest date
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
@@ -29,7 +33,7 @@ function BookLandingPage() {
           navigate('/signin');
         }
     })
-  }, [username, bookName, bookId]);
+  };
 
   return (
     <Box sx={{ height: '100%' }}>
