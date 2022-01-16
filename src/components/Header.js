@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
 import { Typography, Box, Stack, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -54,18 +55,11 @@ function Header(props) {
   };
 
   return (
-    <Box sx={{ 
-      padding: '1rem', 
-      boxShadow: '2px 2px 2px grey'
-    }}>
-      <Stack 
+    <HeaderBox>
+      <OuterStack 
         direction="row" 
         alignItems="center" 
         justifyContent="space-between" 
-        sx={{
-          maxWidth: '1000px',
-          margin: '0 auto'
-        }}
       >
         <Typography variant="p">{username}</Typography>
         <Stack direction="row" spacing={2}>
@@ -94,9 +88,20 @@ function Header(props) {
             actionButtonText="Delete"
           />
         </Stack>
-      </Stack>
-    </Box>
+      </OuterStack>
+    </HeaderBox>
   );
 }
+
+const HeaderBox = styled(Box)({
+  padding: '1rem', 
+  boxShadow: '2px 2px 2px grey',
+});
+
+const OuterStack = styled(Stack)({
+  maxWidth: '1000px',
+  margin: '0 auto',
+});
+
 
 export default Header;

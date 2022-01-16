@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
 import { Typography, Box, Grid } from '@mui/material';
 import { getToken } from '../utils/utils';
 import AttendanceBook from './AttendanceBook';
@@ -57,15 +58,25 @@ function MyAttendanceBooks() {
   };
 
   return (
-    <Box sx={{ padding: '2rem 1rem', maxWidth: '1000px', margin: '0 auto'}}>
+    <MyAttBooksBox>
       <Typography variant="h4">My Attendance Books</Typography>
-      <Grid container spacing={2} sx={{marginTop: '1rem'}}>
+      <TopSpacedGrid container spacing={2}>
         {renderAttBooks()}
         <NewAttendanceBook onAdd={handleAddNewAttBook} />
-      </Grid>
+      </TopSpacedGrid>
       <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
-    </Box>
+    </MyAttBooksBox>
   );
 }
+
+const MyAttBooksBox = styled(Box)({
+  padding: '2rem 1rem', 
+  maxWidth: '1000px', 
+  margin: '0 auto',
+});
+
+const TopSpacedGrid = styled(Grid)({
+  marginTop: '1rem',
+});
 
 export default MyAttendanceBooks;

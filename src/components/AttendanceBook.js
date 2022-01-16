@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Box, Grid, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -58,42 +59,18 @@ function AttendanceBook(props) {
 
   return (
     <Grid item xs={12} sm={4}>
-      <Box
-        sx={{
-          backgroundColor: theme.palette.primary.light,
-          display: 'flex',
-          padding: '0.5rem',
-          borderRadius: '5px',
-          height: '5rem',
-          '&:hover': {
-            cursor: 'pointer',
-            backgroundColor: theme.palette.primary.main,
-            color: 'white',
-            fontSize: '1.25rem',
-            transition: '1s ease'
-         },
-        }}
-      >
-        <Typography variant="p" 
-          sx={{
-            width:'100%', 
-            height: '100%',
-            display: 'flex',
-            alignItems: 'flex-end',
-          }} 
+      <AttendanceBookBox>
+        <BookNameTypography 
+          variant="p" 
           onClick={handleAttBookClick}
         >
           {book.bookName}
-        </Typography>
-        <MoreVertIcon sx={{color:'grey'}} onClick={handleMoreClick}/>
+        </BookNameTypography>
+        <MoreVertIcon color="action" onClick={handleMoreClick}/>
         <Menu
-          id="basic-menu"
           anchorEl={moreAnchorEl}
           open={openMore}
           onClose={handleMoreClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
         >
           <MenuItem onClick={handleDeleteClick}>
             <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
@@ -108,9 +85,31 @@ function AttendanceBook(props) {
           cancelButtonText="Cancel"
           actionButtonText="Delete"
         />
-      </Box>
+      </AttendanceBookBox>
     </Grid>
   );
 }
+
+const AttendanceBookBox = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.light,
+  display: 'flex',
+  padding: '0.5rem',
+  borderRadius: '5px',
+  height: '5rem',
+  '&:hover': {
+    cursor: 'pointer',
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+    fontSize: '1.25rem',
+    transition: '1s ease'
+  },
+}));
+
+const BookNameTypography = styled(Typography)({
+  width:'100%', 
+  height: '100%',
+  display: 'flex',
+  alignItems: 'flex-end',
+});
 
 export default AttendanceBook;

@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Collapse, Alert, Stack, Typography, Button, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { styled } from '@mui/system';
+import { Stack, Typography, Grid, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { getToken } from '../utils/utils';
+import { FullWidthHeightButton } from '../styles/styledComponents';
 import ConfirmationDialog from './ConfirmationDialog';
 import NewSheetDialog from './NewSheetDialog';
 import ViewMembers from '../components/ViewMembers';
@@ -78,44 +80,57 @@ function SheetHeader(props) {
     }
   }
 
+  const renderDateSelector = () => {
+    if (withDateSelector) {
+      return (
+        <Select
+          value={selectedDate}
+          label="Date"
+          onChange={handleSelectDate}
+        >
+          {dates.map((date) => (
+            <MenuItem 
+              value={date.date} 
+              key={date.date}
+            >
+              {date.date}
+            </MenuItem>
+          ))}
+        </Select> 
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
-    <Stack sx={{padding: '1rem', maxWidth: '1000px', margin: '0 auto'}}>
+    <SheetHeaderStack>
       <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
-      <Stack direction="row" justifyContent="space-between" sx={{margin: '1rem 0'}}>
+      <InnerStack direction="row" justifyContent="space-between" >
         <Typography variant="h4">{bookName}</Typography>
         <FormControl>
-          <InputLabel id="demo-simple-select-label">Date</InputLabel>
-          { withDateSelector ? <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedDate}
-            label="Date"
-            onChange={handleSelectDate}
-          >
-            {dates.map((date) => <MenuItem value={date.date} key={date.date}>{date.date}</MenuItem>)}
-          </Select> : null}
+          <InputLabel>Date</InputLabel>
+          {renderDateSelector()}
         </FormControl>
-      </Stack>
+      </InnerStack>
       <Grid container spacing={1}>
         <Grid item sm={6} xs={4}><ViewMembers /></Grid>
         <Grid item sm={3} xs={4}>
-          <Button 
+          <FullWidthHeightButton 
             variant="contained" 
-            sx={{height: '100%', width: '100%'}} 
             onClick={() => setOpenDelConfirmation(true)} 
             disabled={!withDateSelector}
           >
             Delete Current Sheet
-          </Button>
+          </FullWidthHeightButton>
         </Grid>
         <Grid item sm={3} xs={4}>
-          <Button 
+          <FullWidthHeightButton 
             variant="contained" 
-            sx={{height: '100%', width: '100%'}} 
             onClick={() => setOpenCreateConfirmation(true)}
           >
             Create New Sheet
-          </Button>
+          </FullWidthHeightButton>
         </Grid>
       </Grid>
       <ConfirmationDialog 
@@ -130,8 +145,18 @@ function SheetHeader(props) {
         open={openCreateConfirmation} 
         onClose={() => setOpenCreateConfirmation(false)}
       />
-    </Stack>
+    </SheetHeaderStack>
   );
 }
+
+const SheetHeaderStack = styled(Stack)({
+  padding: '1rem', 
+  maxWidth: '1000px', 
+  margin: '0 auto'
+});
+
+const InnerStack = styled(Stack)({
+  margin: '1rem 0',
+});
 
 export default SheetHeader;

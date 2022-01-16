@@ -1,11 +1,7 @@
-import { Alert, Collapse } from '@mui/material';
 import { useEffect } from 'react';
+import { styled } from '@mui/system';
+import { Alert, Collapse } from '@mui/material';
 
-export const alertSeverity = {
-  "SUCCESS": "success",
-  "WARN": "warning",
-  "ERROR": "error",
-}
 function AlertFeedback (props) {
   const { msg, onClose, severity } = props;
 
@@ -15,9 +11,19 @@ function AlertFeedback (props) {
 
   return (
     <Collapse in={!!msg}>
-      <Alert severity={severity} onClose={onClose} sx={{marginTop: '1rem'}}>{msg}</Alert>
+      <StyledAlert severity={severity} onClose={onClose}>{msg}</StyledAlert>
     </Collapse>
   );
 }
+
+export const alertSeverity = {
+  "SUCCESS": "success",
+  "WARN": "warning",
+  "ERROR": "error",
+}
+
+const StyledAlert = styled(Alert)({
+  marginTop: '1rem',
+});
 
 export default AlertFeedback;

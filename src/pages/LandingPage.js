@@ -1,6 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
 import { Box, CircularProgress } from '@mui/material';
 import { getToken } from '../utils/utils';
 
@@ -24,10 +25,17 @@ function LandingPage() {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', height: '100vh', alignItems: 'center' }}>
+    <ProgressBox>
       <CircularProgress />
-    </Box>
+    </ProgressBox>
   );
 }
+
+const ProgressBox = styled(Box)({
+  display: 'flex', 
+  justifyContent: 'center', 
+  height: '100vh', 
+  alignItems: 'center'
+});
 
 export default LandingPage;

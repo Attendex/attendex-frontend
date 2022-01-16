@@ -1,10 +1,10 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, TextField, Typography, Box, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import { storeToken } from '../utils/utils';
+import { AuthOuterBox, AuthInnerBox, AuthCard, GreyTypography, AuthTextField, AuthAltButton } from '../styles/styledComponents';
 import { alertSeverity } from '../components/AlertFeedback';
 import AlertFeedback from '../components/AlertFeedback';
 
@@ -16,7 +16,6 @@ function SignUpPage() {
   const [warnMsg, setWarnMsg] = useState(null);
 
   const handleSignUp = () => {
-    // Make API call to sign up 
     if (username.length > 25 || password.length > 25) {
       setWarnMsg("Username and password length cannot be more than 25 characters!");
     } else {
@@ -34,52 +33,35 @@ function SignUpPage() {
   };
 
   return (
-    <Box sx={{ height: '100vh', padding: '1rem' }}>
-      <Box sx={{ position: 'relative', top: '20%' }}>
-        <Card
-          elevation={3}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            margin: '0 auto',
-            padding: '1rem',
-            borderRadius: '10px',
-            maxWidth: '600px',
-            background: 'white',
-          }}
-        >
-          <Typography variant="h3" sx={{ color: 'grey' }}>
-            Sign Up
-          </Typography>
-          <TextField 
+    <AuthOuterBox>
+      <AuthInnerBox>
+        <AuthCard elevation={3}>
+          <GreyTypography variant="h3">Sign Up</GreyTypography>
+          <AuthTextField 
             label="Username" 
             variant="outlined" 
             margin="normal" 
-            sx={{ width: '90%' }} 
             onChange={(event) => setUsername(event.target.value)} 
           />
-          <TextField 
+          <AuthTextField 
             label="Password" 
             type="password" 
             margin="normal" 
-            sx={{ width: '90%' }} 
             onChange={(event) => setPassword(event.target.value)}
           />
-          <TextField 
+          <AuthTextField 
             label="Confirm Password" 
             type="password" 
             margin="normal" 
-            sx={{width: '90%'}} 
             error={password !== confirmPassword} 
             onChange={(event) => setConfirmPassword(event.target.value)} 
           />
           <Button variant="contained" onClick={handleSignUp}>Sign Up</Button>
           <AlertFeedback msg={warnMsg} severity={alertSeverity.WARN} onClose={() => setWarnMsg(null)} />
-        </Card>
-        <Button variant="none" sx={{margin:'1rem' }} href="/signin">Already have an account? Sign in here</Button>
-      </Box>
-    </Box>
+        </AuthCard>
+        <AuthAltButton variant="none" href="/signin">Already have an account? Sign in here</AuthAltButton>
+      </AuthInnerBox>
+    </AuthOuterBox>
   );
 }
 

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { Box, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { getToken } from '../utils/utils';
 
@@ -79,50 +80,75 @@ function AttendanceTable(props) {
     }
     return memberAtts.map((memberAtt, index) => {
       return (
-        <TableRow
-          key={index}
-          sx={{ 
-            '&:last-child td, &:last-child th': { borderBottom: 0,},
-            '&:nth-of-type(odd)': {
-              backgroundColor: theme.palette.action.hover,
-            },
-          }}
-        >
-          <TableCell component="th" scope="row" sx={{borderRight: '1px solid grey'}}>
-            {memberAtt.memberName}
-          </TableCell>
+        <MemberAttTableRow key={index}>
+          <MemberAttTableCell>{memberAtt.memberName}</MemberAttTableCell>
           <TableCell align="center">
-            <Checkbox
+            <MemberAttCheckbox
               checked={!!memberAtts[index].attended}
               onChange={(event) => handleUpdateMemberAtt(event, index)}
-              sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
             />
           </TableCell>
-        </TableRow>
+        </MemberAttTableRow>
       )
     });
   };
 
   return (
-    <Box sx={{ maxWidth: '1000px', padding: '1rem', margin: '0 auto' }}>
+    <AttTableBox>
       <TableContainer component={Paper}>
-        <Table aria-label="simple table">
+        <Table>
           <TableHead>
-            <TableRow sx={{
-                backgroundColor: theme.palette.primary.main,
-                color: 'white',
-            }}>
-              <TableCell sx={{color: 'white', fontWeight: 'bold', borderRight: '1px solid white'}}>Name</TableCell>
-              <TableCell sx={{color: 'white', fontWeight: 'bold'}} align="center">Attended</TableCell>
-            </TableRow>
+            <AttTableHeaderTableRow>
+              <HeaderLeftTableCell>Name</HeaderLeftTableCell>
+              <HeaderRightTableCell align="center">Attended</HeaderRightTableCell>
+            </AttTableHeaderTableRow>
           </TableHead>
-          <TableBody>
-            {renderMemberAttRows()}
-          </TableBody>
+          <TableBody>{renderMemberAttRows()}</TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </AttTableBox>
   );
 }
+
+const MemberAttTableRow = styled(TableRow)(({ theme }) => ({
+  '&:last-child td, &:last-child th': { 
+    borderBottom: 0,
+  },
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const MemberAttTableCell = styled(TableCell)({
+  borderRight: '1px solid grey',
+});
+
+const MemberAttCheckbox = styled(Checkbox)({
+  '& .MuiSvgIcon-root': { 
+    fontSize: 28 
+  },
+});
+
+const AttTableBox = styled(Box)({
+  maxWidth: '1000px', 
+  padding: '1rem', 
+  margin: '0 auto',
+});
+
+const AttTableHeaderTableRow = styled(TableRow)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: 'white',
+}));
+
+const HeaderLeftTableCell = styled(TableCell)({
+  color: 'white', 
+  fontWeight: 'bold', 
+  borderRight: '1px solid white'
+});
+
+const HeaderRightTableCell = styled(TableCell)({
+  color: 'white', 
+  fontWeight: 'bold', 
+});
 
 export default AttendanceTable;

@@ -2,7 +2,8 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import { Collapse, Alert, Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
+import { styled } from '@mui/system';
+import { Stack, Box, Button, Chip, DialogContentText, DialogActions, DialogContent, DialogTitle, Dialog, TextField } from '@mui/material';
 import { update } from '../store/membersSlice';
 import { getToken } from '../utils/utils';
 import ConfirmationDialog from './ConfirmationDialog';
@@ -17,11 +18,12 @@ function ViewMembers() {
 
   return (
     <Box>
-      <Button 
+      <FullWidthHeightButton 
         variant="contained" 
-        sx={{height: '100%', width: '100%'}}
         onClick={handleOpenMemberDialog}
-      >View Members</Button>
+      >
+        View Members
+      </FullWidthHeightButton>
       <MemberDialog
         open={openMemberDialog}
         onClose={handleCloseMemberDialog}
@@ -100,6 +102,7 @@ function MemberDialog(props) {
   };
 
   const handleDeleteChipClick = (member) => {
+    console.log('member.id', member)
     setOpenConfirmation(true);
     setMemberIdToDelete(member.memberID);
   };
@@ -136,6 +139,16 @@ function MemberDialog(props) {
     }
   };
 
+  const renderMemberChips = () => {
+    return members.map((member) => (
+      <Chip
+        key={member.memberID}
+        label={member.memberName}
+        onDelete={() => handleDeleteChipClick(member)}
+      />
+    ));
+  };
+
   return (
     <Dialog onClose={onClose} open={open}>
       <DialogTitle>Members</DialogTitle>
@@ -152,14 +165,8 @@ function MemberDialog(props) {
           />
           <Button onClick={handleAddMember}>Add</Button>
         </Stack>
-        <DialogContentText sx={{marginTop: '1rem'}}>Delete members</DialogContentText>
-        {members.map((member) => (
-          <Chip
-            key={member.memberID}
-            label={member.memberName}
-            onDelete={(member) => handleDeleteChipClick(member)}
-          />
-        ))}
+        <TopSpacedDialogContentText>Delete members</TopSpacedDialogContentText>
+        {renderMemberChips()}
         <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
         <AlertFeedback msg={warnMsg} severity={alertSeverity.WARN} onClose={() => setWarnMsg(null)} />
         <AlertFeedback msg={errorMsg} severity={alertSeverity.ERROR} onClose={() => setErrorMsg(null)} />
@@ -178,5 +185,14 @@ function MemberDialog(props) {
     </Dialog>
   );
 }
+
+const FullWidthHeightButton = styled(Button)({
+  height: '100%', 
+  width: '100%'
+});
+
+const TopSpacedDialogContentText = styled(DialogContentText)({
+  marginTop: '1rem',
+});
 
 export default ViewMembers;

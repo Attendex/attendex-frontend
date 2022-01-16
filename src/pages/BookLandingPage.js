@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
 import { getToken } from '../utils/utils';
+import { FullHeightBox } from '../styles/styledComponents';
 import Header from '../components/Header';
 import SheetHeader from '../components/SheetHeader';
 import Attendances from '../components/Attendances';
@@ -40,12 +40,14 @@ function BookLandingPage() {
   };
 
   return (
-    <Box sx={{ height: '100%' }}>
+    <FullHeightBox>
       <Header username={username}/>
       <SheetHeader withDateSelector={false} />
       <Attendances emptyAttendance={true} />
-    </Box>
+    </FullHeightBox>
   );
 }
+
+
 
 export default BookLandingPage;

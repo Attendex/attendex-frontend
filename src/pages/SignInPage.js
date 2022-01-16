@@ -2,7 +2,8 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, TextField, Typography, Box, Button } from '@mui/material';
+import { AuthOuterBox, AuthInnerBox, AuthCard, GreyTypography, AuthTextField, AuthAltButton } from '../styles/styledComponents';
+import { Button } from '@mui/material';
 import { storeToken } from '../utils/utils';
 import { alertSeverity } from '../components/AlertFeedback';
 import AlertFeedback from '../components/AlertFeedback';
@@ -14,7 +15,6 @@ function SignInPage() {
   const [errorMsg, setErrorMsg] = useState(null);
 
   const handleSignIn = () => {
-    // Make API call to sign in, returns jwt token
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,
       {
         "userid": username, 
@@ -33,44 +33,28 @@ function SignInPage() {
   };
 
   return (
-    <Box sx={{ height: '100vh', padding: '1rem' }}>
-      <Box sx={{ position: 'relative', top: '20%' }}>
-        <Card
-          elevation={3}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            margin: '0 auto',
-            padding: '1rem',
-            borderRadius: '10px',
-            maxWidth: '600px',
-            background: 'white',
-          }}
-        >
-          <Typography variant="h3" sx={{ color: 'grey' }}>
-            Sign In
-          </Typography>
-          <TextField 
+    <AuthOuterBox>
+      <AuthInnerBox>
+        <AuthCard elevation={3}>
+          <GreyTypography variant="h3">Sign In</GreyTypography>
+          <AuthTextField 
             label="Username" 
             variant="outlined" 
             margin="normal" 
-            sx={{ width: '90%' }}
             onChange={(event) => setUsername(event.target.value)} 
           />
-          <TextField 
+          <AuthTextField 
             label="Password" 
             type="password" 
             margin="normal" 
-            sx={{width: '90%'}}
             onChange={(event) => setPassword(event.target.value)}
           />
           <Button variant="contained" onClick={handleSignIn}>Sign In</Button>
           <AlertFeedback msg={errorMsg} severity={alertSeverity.ERROR} onClose={() => setErrorMsg(null)} />
-        </Card>
-        <Button variant="none" sx={{ margin:'1rem' }} href="/signup">Don't have an account? Sign up here</Button>
-      </Box>
-    </Box>
+        </AuthCard>
+        <AuthAltButton variant="none" href="/signup">Don't have an account? Sign up here</AuthAltButton>
+      </AuthInnerBox>
+    </AuthOuterBox>
   );
 }
 

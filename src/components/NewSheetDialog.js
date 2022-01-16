@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { styled } from '@mui/system';
 import { Box, Button, DialogActions, DialogContent, Dialog, DialogTitle, TextField } from '@mui/material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -74,7 +75,9 @@ function NewSheetDialog (props) {
     >
       <DialogTitle>Create New Sheet</DialogTitle>
       <DialogContent>
-        <Box sx={{padding: '1rem'}}><SheetDatePicker onChange={(newValue) => handleSelectDateChange(newValue)}/></Box>
+        <SheetDatePickerBox>
+          <SheetDatePicker onChange={(newValue) => handleSelectDateChange(newValue)}/>
+        </SheetDatePickerBox>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose(false)}>Cancel</Button>
@@ -84,5 +87,9 @@ function NewSheetDialog (props) {
     </Dialog>
   );
 }
+
+const SheetDatePickerBox = styled(Box)({
+  padding: '1rem',
+});
 
 export default NewSheetDialog;
