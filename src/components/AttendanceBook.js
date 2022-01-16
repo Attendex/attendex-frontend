@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Box, Grid, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,13 +23,11 @@ function AttendanceBook(props) {
 
   const handleDeleteBook = (isConfirmed) => {
     if (isConfirmed) {
-      console.log('delete book', book.bookID)
-      // Send API call to delete member with sheetID
+      // Send API call to delete book with bookId
       const token = getToken();
       axios.delete(`${process.env.REACT_APP_BACKEND_URL}/deletebook`,
         { headers: {"Authorization" : `Bearer ${token}`}, data: { "bookid": book.bookID }})
         .then(res => {
-          console.log('deletebook success')
           onDeleteBook();
         }).catch((error) => { 
           if (error.response.status === 401) {
@@ -81,7 +78,7 @@ function AttendanceBook(props) {
           }}
         >
           <MenuItem onClick={() => {setOpenDelConfirmation(true);}}>
-            <ListItemIcon><DeleteIcon sx={{color:'#757575'}}/></ListItemIcon>
+            <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
             <ListItemText>Delete Book</ListItemText>
           </MenuItem>
         </Menu>
