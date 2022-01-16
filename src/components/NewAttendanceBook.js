@@ -1,23 +1,36 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
+import { getToken } from '../utils/utils';
 
-function NewAttendanceBook() {
+function NewAttendanceBook(props) {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [newBookName, setNewBookName] = useState('');
+  const { onAdd } = props;
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleCreate = () => {
+    const token = getToken();
+    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addbook`,
+      {"bookname": newBookName},
+      { headers: {"Authorization" : `Bearer ${token}`}})
+      .then(res => {
+        onAdd();
+        setOpen(false);
+      }).catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    })
+  }
 
   return (
     <Grid item xs={12} sm={4}>
       <Box
-        onClick={handleClickOpen}
+        onClick={() => setOpen(true)}
         sx={{
           backgroundColor: theme.palette.primary.lighter,
           display: 'flex',
@@ -37,7 +50,7 @@ function NewAttendanceBook() {
       >
         <Typography variant="p">Create New Book</Typography>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Create New Book</DialogTitle>
         <DialogContent>
           <TextField
@@ -47,11 +60,12 @@ function NewAttendanceBook() {
             type="text"
             fullWidth
             variant="standard"
+            onChange={(event) => setNewBookName(event.target.value)}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Create</Button>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={handleCreate}>Create</Button>
         </DialogActions>
       </Dialog>
     </Grid>

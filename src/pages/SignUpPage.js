@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, TextField, Typography, Box, Button } from '@mui/material';
-
+import axios from 'axios';
+import { storeToken } from '../utils/utils';
 
 function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSignUp = () => {
+    // Make API call to sign up 
+    axios.post(`http://localhost:3000/signup`,
+      {
+        "userid": username, 
+        "password": password,
+      }).then(res => {
+        storeToken(res.accessToken) // Store jwt token into localStorage as token with expiry of 30mins
+      })
+  };
 
   return (
     <Box sx={{ height: '100vh', padding: '1rem' }}>
@@ -48,7 +60,7 @@ function SignUpPage() {
             error={password !== confirmPassword} 
             onChange={(event) => setConfirmPassword(event.target.value)} 
           />
-          <Button variant="contained" href="/username">Sign Up</Button>
+          <Button variant="contained" onClick={handleSignUp}>Sign Up</Button>
         </Card>
         <Button variant="none" sx={ {margin:'1rem' }} href="/signin">Already have an account? Sign in here</Button>
       </Box>

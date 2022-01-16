@@ -6,14 +6,19 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import './index.css';
 import App from './App';
+import store from './store/store';
+import { Provider } from 'react-redux';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
+    
   </React.StrictMode>,
   document.getElementById('root')
 );
