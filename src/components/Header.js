@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Stack, Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 import ConfirmationDialog from './ConfirmationDialog';
 import { getToken } from '../utils/utils';
 import axios from 'axios';
@@ -56,33 +58,35 @@ function Header(props) {
         }}
       >
         <Typography variant="p">{username}</Typography>
-        <ManageAccountsIcon color="action" onClick={handleClick}/>
-        {/* <Button variant="contained" color="secondary" onClick={handleSignOut}>Sign Out</Button> */}
-        <Menu
-          anchorEl={anchorEl}
-          open={openUserMenu}
-          onClose={() => setAnchorEl(null)}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          <MenuItem onClick={handleSignOut}>
-            <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
-            <ListItemText>Sign Out</ListItemText>
-          </MenuItem>
-          <MenuItem onClick={() => {setOpenDelConfirmation(true);}}>
-            <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
-            <ListItemText>Delete account</ListItemText>
-          </MenuItem>
-        </Menu>
-        <ConfirmationDialog 
-          open={openDelConfirmation} 
-          onClose={(isConfirmed) => { setOpenDelConfirmation(false); handleDeleteAccount(isConfirmed);}}
-          title="Delete account"
-          text="Please note that ALL ATTENDANCE DATA of books in this account will be permanently deleted. Proceed to delete account?"
-          cancelButtonText="Cancel"
-          actionButtonText="Delete"
-        />
+        <Stack direction="row" spacing={2}>
+          <HomeIcon color="action" onClick={() => navigate(`/${username}`)}/>
+          <ManageAccountsIcon color="action" onClick={handleClick}/>
+          <Menu
+            anchorEl={anchorEl}
+            open={openUserMenu}
+            onClose={() => setAnchorEl(null)}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+            <MenuItem onClick={handleSignOut}>
+              <ListItemIcon><LogoutIcon color="action" /></ListItemIcon>
+              <ListItemText>Sign Out</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={() => {setOpenDelConfirmation(true);}}>
+              <ListItemIcon><DeleteIcon color="action" /></ListItemIcon>
+              <ListItemText>Delete account</ListItemText>
+            </MenuItem>
+          </Menu>
+          <ConfirmationDialog 
+            open={openDelConfirmation} 
+            onClose={(isConfirmed) => { setOpenDelConfirmation(false); handleDeleteAccount(isConfirmed);}}
+            title="Delete account"
+            text="Please note that ALL ATTENDANCE DATA of books in this account will be permanently deleted. Proceed to delete account?"
+            cancelButtonText="Cancel"
+            actionButtonText="Delete"
+          />
+        </Stack>
       </Stack>
     </Box>
   );

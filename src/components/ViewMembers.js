@@ -14,7 +14,7 @@ function MemberDialog(props) {
   const { onClose, open } = props;
   const { username, bookId, bookName, date, sheetId } = useParams();
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [newMember, setNewMember] = useState(null);
+  const [newMember, setNewMember] = useState('');
   const [memberIdToDelete, setMemberIdToDelete] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [members, setMembers] = useState([]);
