@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, TextField, Typography, Box, Button } from '@mui/material';
+import { Alert, Collapse, Card, TextField, Typography, Box, Button } from '@mui/material';
 import axios from 'axios';
 import { storeToken } from '../utils/utils';
 
@@ -7,16 +7,21 @@ function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [warnMsg, setWarnMsg] = useState(null);
 
   const handleSignUp = () => {
     // Make API call to sign up 
-    axios.post(`http://localhost:3000/signup`,
+    if (username.length > 25 || password.length > 25) {
+      setWarnMsg("Username and password length cannot be more than 25 characters!");
+    } else {
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/signup`,
       {
         "userid": username, 
         "password": password,
       }).then(res => {
         storeToken(res.accessToken) // Store jwt token into localStorage as token with expiry of 30mins
       })
+    }
   };
 
   return (
@@ -61,6 +66,9 @@ function SignUpPage() {
             onChange={(event) => setConfirmPassword(event.target.value)} 
           />
           <Button variant="contained" onClick={handleSignUp}>Sign Up</Button>
+          <Collapse in={!!warnMsg} sx={{marginTop: '1rem'}}>
+            <Alert severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
+          </Collapse>
         </Card>
         <Button variant="none" sx={ {margin:'1rem' }} href="/signin">Already have an account? Sign in here</Button>
       </Box>

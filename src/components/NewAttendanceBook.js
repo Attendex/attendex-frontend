@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Alert, Collapse, TextField, Typography, Box, Button, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { getToken } from '../utils/utils';
@@ -11,20 +11,26 @@ function NewAttendanceBook(props) {
   const [open, setOpen] = useState(false);
   const [newBookName, setNewBookName] = useState('');
   const { onAdd } = props;
+  const [warnMsg, setWarnMsg] = useState(null);
 
   const handleCreate = () => {
-    const token = getToken();
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/addbook`,
-      {"bookname": newBookName},
-      { headers: {"Authorization" : `Bearer ${token}`}})
-      .then(res => {
-        onAdd();
-        setOpen(false);
-      }).catch((error) => { 
-        if (error.response.status === 401) {
-          navigate('/signin');
-        }
-    })
+    if (newBookName.length > 45) {
+      setWarnMsg('Book names cannot be longer than 45 characters');
+    } else {
+      const token = getToken();
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/addbook`,
+        {"bookname": newBookName},
+        { headers: {"Authorization" : `Bearer ${token}`}})
+        .then(res => {
+          onAdd();
+          setOpen(false);
+        }).catch((error) => { 
+          if (error.response.status === 401) {
+            navigate('/signin');
+          }
+      });
+    }
+    
   }
 
   return (
@@ -50,7 +56,7 @@ function NewAttendanceBook(props) {
       >
         <Typography variant="p">Create New Book</Typography>
       </Box>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={open} onBackdropClick={() => {setOpen(false); setWarnMsg(null);}}>
         <DialogTitle>Create New Book</DialogTitle>
         <DialogContent>
           <TextField
@@ -62,9 +68,12 @@ function NewAttendanceBook(props) {
             variant="standard"
             onChange={(event) => setNewBookName(event.target.value)}
           />
+          <Collapse in={!!warnMsg} sx={{marginTop: '1rem'}}>
+            <Alert severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
+          </Collapse>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={() => {setOpen(false); setWarnMsg(null);}}>Cancel</Button>
           <Button onClick={handleCreate}>Create</Button>
         </DialogActions>
       </Dialog>

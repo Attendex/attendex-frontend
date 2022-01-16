@@ -16,6 +16,7 @@ function MemberDialog(props) {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [newMember, setNewMember] = useState('');
   const [memberIdToDelete, setMemberIdToDelete] = useState(null);
+  const [warnMsg, setWarnMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [members, setMembers] = useState([]);
   const [openDelSuccess, setOpenDelSuccess] = useState(false);
@@ -42,6 +43,9 @@ function MemberDialog(props) {
   };
 
   const addMember = () => {
+    if (newMember.length > 45) {
+      setWarnMsg("Member names cannot be longer than 45 characters.");
+    }
     // API call to add member
     const token = getToken();
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/addmember`,
@@ -103,6 +107,9 @@ function MemberDialog(props) {
             onDelete={() => {setOpenConfirmation(true); setMemberIdToDelete(member.memberID);}}
           />
         ))}
+        <Collapse in={!!warnMsg} sx={{marginTop: '1rem'}}>
+          <Alert severity="warning" onClose={() => {setWarnMsg(null);}}>{warnMsg}</Alert>
+        </Collapse>
         <Collapse in={!!errorMsg} sx={{marginTop: '1rem'}}>
           <Alert severity="error" onClose={() => {setErrorMsg(null);}}>{errorMsg}</Alert>
         </Collapse>

@@ -6,7 +6,7 @@ function ConfirmationDialog (props) {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onBackdropClick={() => onClose(false)}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>

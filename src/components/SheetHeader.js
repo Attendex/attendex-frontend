@@ -41,7 +41,6 @@ function SheetHeader(props) {
         navigate(`/${username}/${bookName}/${bookId}/${dateStr}/${date.sheetID}`);
       }
     })
-    
   };
 
   const handleDelete = (isConfirmed) => {
@@ -84,7 +83,7 @@ function SheetHeader(props) {
       </Stack>
       <Grid container spacing={1}>
         <Grid item sm={6} xs={4}><ViewMembers /></Grid>
-        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenDelConfirmation(true)}>Delete Current Sheet</Button></Grid>
+        <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenDelConfirmation(true)} disabled={!withDateSelector}>Delete Current Sheet</Button></Grid>
         <Grid item sm={3} xs={4}><Button variant="contained" sx={{height: '100%', width: '100%'}} onClick={() => setOpenCreateConfirmation(true)}>Create New Sheet</Button></Grid>
       </Grid>
       <ConfirmationDialog 
