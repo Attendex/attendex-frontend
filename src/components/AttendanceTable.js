@@ -26,25 +26,48 @@ function AttendanceTable(props) {
 
   useEffect(() => {
     if (!emptyTable) {
-      // Fetch member attendances for this date
-      const token = getToken();
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
-      { headers: {"Authorization" : `Bearer ${token}`}})
-      .then(res => {
-        const fetchedMemberAtts = res.data;
-        setMemberAtts(fetchedMemberAtts);
-      }).catch((error) => { 
-        if (error.response.status === 401) {
-          navigate('/signin');
-        }
-      })
+      fetchMemberAtts();
     }
-  }, [members]);
+  }, [members, sheetId]);
 
-  const onChange = (event, key) => {
+  const fetchMemberAtts = () => {
+    console.log('fetching member atts');
+    // Fetch member attendances for this date
+    const token = getToken();
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
+    { headers: {"Authorization" : `Bearer ${token}`}})
+    .then(res => {
+      const fetchedMemberAtts = res.data;
+      setMemberAtts(fetchedMemberAtts);
+    }).catch((error) => { 
+      if (error.response.status === 401) {
+        navigate('/signin');
+      }
+    });
+  };
+
+  const updateAtt = (event, key) => {
     const newMemberAtts = [...memberAtts] // creating a shallow copy of array to trigger change in state
     newMemberAtts[key].attended = event.target.checked ? 1 : 0;
     setMemberAtts(newMemberAtts);
+    const member = memberAtts[key];
+    const memberId = member.memberID;
+    const attended = event.target.checked ? 1 : 0;
+    const token = getToken();
+    axios.put(`${process.env.REACT_APP_BACKEND_URL}/updatememberattendance`, 
+      { 
+        "memberid": memberId,
+        "attended": attended,
+        "sheetid": sheetId,
+      },
+      { headers: {"Authorization" : `Bearer ${token}`}}
+    ).then(res => {
+      fetchMemberAtts();
+    }).catch((error) => { 
+      if (error.response.status === 401) {
+        navigate('/signin');
+      }
+    });
   }
 
   return (
@@ -78,7 +101,7 @@ function AttendanceTable(props) {
                 <TableCell align="center">
                   <Checkbox
                     checked={!!memberAtts[index].attended}
-                    onChange={(event) => onChange(event, index)}
+                    onChange={(event) => updateAtt(event, index)}
                     sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
                   />
                 </TableCell>
