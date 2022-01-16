@@ -1,51 +1,82 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Typography, Box, Grid, Collapse, Alert } from '@mui/material';
+import { styled } from '@mui/system';
+import { Typography, Box, Grid } from '@mui/material';
+import { getToken } from '../utils/utils';
 import AttendanceBook from './AttendanceBook';
 import NewAttendanceBook from './NewAttendanceBook';
-import { getToken } from '../utils/utils';
+import { alertSeverity } from './AlertFeedback';
+import AlertFeedback from './AlertFeedback';
 
 function MyAttendanceBooks() {
   const navigate = useNavigate();
+
   const [successMsg, setSuccessMsg] = useState(null);
   const [attBooks, setAttBooks] = useState([]);
-
-  const fetchAttBooks = () => {
-    // Fetch all of user's attendance books
-    const token = getToken();
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/getbook`,
-      { headers: {"Authorization" : `Bearer ${token}`}})
-      .then(res => {
-        setAttBooks(res.data);
-      }).catch((error) => { 
-        if (error.response.status === 401) {
-          navigate('/signin');
-        }
-    })
-  }
 
   useEffect(() => {
     fetchAttBooks();
   }, []); 
+  
+  const fetchAttBooks = () => {
+    const token = getToken();
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/getbook`,
+      { 
+        headers: {
+          "Authorization" : `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        setAttBooks(res.data);
+      })
+      .catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+    });
+  }
+
+  const handleAddNewAttBook = () => {
+    fetchAttBooks(); 
+    setSuccessMsg("Book added successfully!");
+  };
+
+  const handleDeleteAttBook = () => {
+    fetchAttBooks();
+    setSuccessMsg("Book deleted successfully!");
+  };
+
+  const renderAttBooks = () => {
+    return attBooks.map((book) => (
+      <AttendanceBook 
+        key={book.bookID} 
+        book={book} 
+        onDeleteBook={handleDeleteAttBook}
+      />
+    ));
+  };
 
   return (
-    <Box sx={{ padding: '2rem 1rem', maxWidth: '1000px', margin: '0 auto'}}>
+    <MyAttBooksBox>
       <Typography variant="h4">My Attendance Books</Typography>
-      <Grid container spacing={2} sx={{marginTop: '1rem'}}>
-        {attBooks.map((book) => 
-          (<AttendanceBook 
-            key={book.bookID} 
-            book={book} 
-            onDeleteBook={() => {fetchAttBooks(); setSuccessMsg("Book deleted successfully!");}}
-          />))}
-        <NewAttendanceBook onAdd={() => {fetchAttBooks(); setSuccessMsg("Book added successfully!");}} />
-      </Grid>
-      <Collapse in={!!successMsg} sx={{marginTop: '1rem'}}>
-        <Alert severity="success" onClose={() => {setSuccessMsg(null);}}>{successMsg}</Alert>
-      </Collapse>
-    </Box>
+      <TopSpacedGrid container spacing={2}>
+        {renderAttBooks()}
+        <NewAttendanceBook onAdd={handleAddNewAttBook} />
+      </TopSpacedGrid>
+      <AlertFeedback msg={successMsg} severity={alertSeverity.SUCCESS} onClose={() => setSuccessMsg(null)} />
+    </MyAttBooksBox>
   );
 }
+
+const MyAttBooksBox = styled(Box)({
+  padding: '2rem 1rem', 
+  maxWidth: '1000px', 
+  margin: '0 auto',
+});
+
+const TopSpacedGrid = styled(Grid)({
+  marginTop: '1rem',
+});
 
 export default MyAttendanceBooks;

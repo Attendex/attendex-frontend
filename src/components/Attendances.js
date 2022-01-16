@@ -1,3 +1,4 @@
+import { styled } from '@mui/system';
 import { Box, Typography } from '@mui/material';
 import AttendanceTable from './AttendanceTable';
 
@@ -7,11 +8,15 @@ function Attendances(props) {
   const { emptyAttendance } = props;
   
   return (
-    <Box sx={{ marginTop: '1rem' }}>
+    <AttendancesBox>
       <Typography variant="h5">Attendances</Typography>
       <AttendanceTable emptyTable={emptyAttendance} />
-    </Box>
+    </AttendancesBox>
   );
 }
+
+const AttendancesBox = styled(Box)({
+  marginTop: '1rem'
+});
 
 export default Attendances;

@@ -1,9 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, Collapse, Card, TextField, Typography, Box, Button } from '@mui/material';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthOuterBox, AuthInnerBox, AuthCard, GreyTypography, AuthTextField, AuthAltButton } from '../styles/styledComponents';
+import { Button } from '@mui/material';
 import { storeToken } from '../utils/utils';
+import { alertSeverity } from '../components/AlertFeedback';
+import AlertFeedback from '../components/AlertFeedback';
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -12,16 +15,17 @@ function SignInPage() {
   const [errorMsg, setErrorMsg] = useState(null);
 
   const handleSignIn = () => {
-    // Make API call to sign in, returns jwt token
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,
       {
         "userid": username, 
         "password": password,
-      }).then(res => {
+      })
+      .then(res => {
         storeToken(res.data.accessToken);  // Store jwt token in localStorage as token with expiry of 30mins
         const decoded = jwt_decode(res.data.accessToken);
         navigate(`/${decoded.userid}`);
-      }).catch((error) => { 
+      })
+      .catch((error) => { 
         if (error.response.status === 403) {
           setErrorMsg("Invalid username or password! Please try again.");
         }
@@ -29,46 +33,28 @@ function SignInPage() {
   };
 
   return (
-    <Box sx={{ height: '100vh', padding: '1rem' }}>
-      <Box sx={{ position: 'relative', top: '20%' }}>
-        <Card
-          elevation={3}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            margin: '0 auto',
-            padding: '1rem',
-            borderRadius: '10px',
-            maxWidth: '600px',
-            background: 'white',
-          }}
-        >
-          <Typography variant="h3" sx={{ color: 'grey' }}>
-            Sign In
-          </Typography>
-          <TextField 
+    <AuthOuterBox>
+      <AuthInnerBox>
+        <AuthCard elevation={3}>
+          <GreyTypography variant="h3">Sign In</GreyTypography>
+          <AuthTextField 
             label="Username" 
             variant="outlined" 
             margin="normal" 
-            sx={{ width: '90%' }}
             onChange={(event) => setUsername(event.target.value)} 
           />
-          <TextField 
+          <AuthTextField 
             label="Password" 
             type="password" 
             margin="normal" 
-            sx={{width: '90%'}}
             onChange={(event) => setPassword(event.target.value)}
           />
           <Button variant="contained" onClick={handleSignIn}>Sign In</Button>
-          <Collapse in={!!errorMsg} sx={{marginTop: '1rem'}}>
-            <Alert severity="error" onClose={() => {setErrorMsg(null);}}>{errorMsg}</Alert>
-          </Collapse>
-        </Card>
-        <Button variant="none" sx={{ margin:'1rem' }} href="/signup">Don't have an account? Sign up here</Button>
-      </Box>
-    </Box>
+          <AlertFeedback msg={errorMsg} severity={alertSeverity.ERROR} onClose={() => setErrorMsg(null)} />
+        </AuthCard>
+        <AuthAltButton variant="none" href="/signup">Don't have an account? Sign up here</AuthAltButton>
+      </AuthInnerBox>
+    </AuthOuterBox>
   );
 }
 

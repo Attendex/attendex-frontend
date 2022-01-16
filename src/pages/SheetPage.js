@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
-import Header from '../components/Header';
 import { useParams } from 'react-router-dom';
+import { FullHeightBox } from '../styles/styledComponents';
+import Header from '../components/Header';
 import SheetHeader from '../components/SheetHeader';
 import Attendances from '../components/Attendances.js';
 
@@ -10,11 +10,11 @@ function SheetPage() {
   const { username } = useParams();
 
   return (
-    <Box sx={{ height: '100%' }}>
+    <FullHeightBox>
       <Header username={username}/>
       <SheetHeader withDateSelector={true} />
       <Attendances emptyAttendances={false} />
-    </Box>
+    </FullHeightBox>
   );
 }
 

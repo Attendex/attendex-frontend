@@ -1,55 +1,50 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
-import { update } from '../store/membersSlice';
-import { Box, Checkbox } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { styled } from '@mui/system';
+import { Box, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { getToken } from '../utils/utils';
-import axios from 'axios';
 
 // URL path would be /:username/:bookId/:bookName/:sheetId/:date
 
 function AttendanceTable(props) {
-  const navigate = useNavigate();
-  const members = useSelector((state) => state.members.members);
   const { emptyTable } = props;
+  
+  const navigate = useNavigate();
   const theme = useTheme();
+  const { sheetId } = useParams();
+  const members = useSelector((state) => state.members.members); // fetch members from redux store
+  
   const [memberAtts, setMemberAtts] = useState([]);
-  const { username, bookId, bookName, sheetId, date } = useParams();
 
   useEffect(() => {
     if (!emptyTable) {
       fetchMemberAtts();
     }
-  }, [members, sheetId]);
+  }, [members, sheetId]); // if members updated, fetch member attendances
 
   const fetchMemberAtts = () => {
-    console.log('fetching member atts');
-    // Fetch member attendances for this date
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getsheet?sheetid=${sheetId}`,
-    { headers: {"Authorization" : `Bearer ${token}`}})
-    .then(res => {
-      const fetchedMemberAtts = res.data;
-      setMemberAtts(fetchedMemberAtts);
-    }).catch((error) => { 
-      if (error.response.status === 401) {
-        navigate('/signin');
-      }
-    });
+      { 
+        headers: {
+          "Authorization" : `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        const fetchedMemberAtts = res.data;
+        setMemberAtts(fetchedMemberAtts);
+      })
+      .catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+      });
   };
 
-  const updateAtt = (event, key) => {
-    const newMemberAtts = [...memberAtts] // creating a shallow copy of array to trigger change in state
-    newMemberAtts[key].attended = event.target.checked ? 1 : 0;
-    setMemberAtts(newMemberAtts);
+  const handleUpdateMemberAtt = (event, key) => {
     const member = memberAtts[key];
     const memberId = member.memberID;
     const attended = event.target.checked ? 1 : 0;
@@ -60,58 +55,100 @@ function AttendanceTable(props) {
         "attended": attended,
         "sheetid": sheetId,
       },
-      { headers: {"Authorization" : `Bearer ${token}`}}
-    ).then(res => {
-      fetchMemberAtts();
-    }).catch((error) => { 
-      if (error.response.status === 401) {
-        navigate('/signin');
-      }
-    });
+      { 
+        headers: {
+          "Authorization" : `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        fetchMemberAtts();
+      })
+      .catch((error) => { 
+        if (error.response.status === 401) {
+          navigate('/signin');
+        }
+      });
   }
 
+  const renderMemberAttRows = () => {
+    if (emptyTable || memberAtts.length === 0) {
+      return (
+        <TableRow>
+          <TableCell align="center" colSpan={2}>Add members or create new sheet to begin :)</TableCell>
+        </TableRow>
+      );
+    }
+    return memberAtts.map((memberAtt, index) => {
+      return (
+        <MemberAttTableRow key={index}>
+          <MemberAttTableCell>{memberAtt.memberName}</MemberAttTableCell>
+          <TableCell align="center">
+            <MemberAttCheckbox
+              checked={!!memberAtts[index].attended}
+              onChange={(event) => handleUpdateMemberAtt(event, index)}
+            />
+          </TableCell>
+        </MemberAttTableRow>
+      )
+    });
+  };
+
   return (
-    <Box sx={{ maxWidth: '1000px', padding: '1rem', margin: '0 auto' }}>
+    <AttTableBox>
       <TableContainer component={Paper}>
-        <Table aria-label="simple table">
+        <Table>
           <TableHead>
-            <TableRow sx={{
-                backgroundColor: theme.palette.primary.main,
-                color: 'white',
-            }}>
-              <TableCell sx={{color: 'white', fontWeight: 'bold', borderRight: '1px solid white'}}>Name</TableCell>
-              <TableCell sx={{color: 'white', fontWeight: 'bold'}} align="center">Attended</TableCell>
-            </TableRow>
+            <AttTableHeaderTableRow>
+              <HeaderLeftTableCell>Name</HeaderLeftTableCell>
+              <HeaderRightTableCell align="center">Attended</HeaderRightTableCell>
+            </AttTableHeaderTableRow>
           </TableHead>
-          <TableBody>
-            {emptyTable || memberAtts.length === 0 ? <TableRow><TableCell align="center" colSpan={2}>Add members or create new sheet to begin :)</TableCell></TableRow>
-            : memberAtts.map((memberAtt, index) => (
-              <TableRow
-                key={index}
-                sx={{ 
-                  '&:last-child td, &:last-child th': { borderBottom: 0,},
-                  '&:nth-of-type(odd)': {
-                    backgroundColor: theme.palette.action.hover,
-                  },
-                }}
-              >
-                <TableCell component="th" scope="row" sx={{borderRight: '1px solid grey'}}>
-                  {memberAtt.memberName}
-                </TableCell>
-                <TableCell align="center">
-                  <Checkbox
-                    checked={!!memberAtts[index].attended}
-                    onChange={(event) => updateAtt(event, index)}
-                    sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          <TableBody>{renderMemberAttRows()}</TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </AttTableBox>
   );
 }
+
+const MemberAttTableRow = styled(TableRow)(({ theme }) => ({
+  '&:last-child td, &:last-child th': { 
+    borderBottom: 0,
+  },
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const MemberAttTableCell = styled(TableCell)({
+  borderRight: '1px solid grey',
+});
+
+const MemberAttCheckbox = styled(Checkbox)({
+  '& .MuiSvgIcon-root': { 
+    fontSize: 28 
+  },
+});
+
+const AttTableBox = styled(Box)({
+  maxWidth: '1000px', 
+  padding: '1rem', 
+  margin: '0 auto',
+});
+
+const AttTableHeaderTableRow = styled(TableRow)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: 'white',
+}));
+
+const HeaderLeftTableCell = styled(TableCell)({
+  color: 'white', 
+  fontWeight: 'bold', 
+  borderRight: '1px solid white'
+});
+
+const HeaderRightTableCell = styled(TableCell)({
+  color: 'white', 
+  fontWeight: 'bold', 
+});
 
 export default AttendanceTable;
