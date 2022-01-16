@@ -13,14 +13,15 @@ function SignUpPage() {
     // Make API call to sign up 
     if (username.length > 25 || password.length > 25) {
       setWarnMsg("Username and password length cannot be more than 25 characters!");
-    }
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/signup`,
+    } else {
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/signup`,
       {
         "userid": username, 
         "password": password,
       }).then(res => {
         storeToken(res.accessToken) // Store jwt token into localStorage as token with expiry of 30mins
       })
+    }
   };
 
   return (
