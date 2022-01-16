@@ -35,19 +35,30 @@ function NewSheetDialog (props) {
   const [newDate, setNewDate] = useState(Date.now());
   const [errorMsg, setErrorMsg] = useState(null);
 
+  const handleSelectDateChange = (newValue) => {
+    setNewDate(newValue);
+  };
+
   const handleCreateNewSheet = () => {
     const formattedDate = formatDate(newDate);
-
     const token = getToken();
     axios.post(`${process.env.REACT_APP_BACKEND_URL}/addsheet`,
-      { "bookid": bookId, "date": formattedDate },
-      { headers: {"Authorization" : `Bearer ${token}`}})
+      { 
+        "bookid": bookId,
+        "date": formattedDate, 
+      },
+      { 
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
       .then(res => {
         setErrorMsg("A sheet already exists on this date!");
         const sheetId = res.data.sheetID;
         onClose();
         navigate(`/${username}/${bookName}/${bookId}/${formattedDate}/${sheetId}`);
-      }).catch((error) => { 
+      })
+      .catch((error) => { 
         if (error.response.status === 401) {
           navigate('/signin');
         } else if (error.response.status === 409) {
@@ -63,7 +74,7 @@ function NewSheetDialog (props) {
     >
       <DialogTitle>Create New Sheet</DialogTitle>
       <DialogContent>
-        <Box sx={{padding: '1rem'}}><SheetDatePicker onChange={(newValue) => {setNewDate(newValue);}}/></Box>
+        <Box sx={{padding: '1rem'}}><SheetDatePicker onChange={(newValue) => handleSelectDateChange(newValue)}/></Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose(false)}>Cancel</Button>

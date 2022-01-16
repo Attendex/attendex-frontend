@@ -13,9 +13,13 @@ function NewAttendanceBook(props) {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const [open, setOpen] = useState(false);
+  const [openNewBookDialog, setOpenNewBookDialog] = useState(false);
   const [newBookName, setNewBookName] = useState('');
   const [warnMsg, setWarnMsg] = useState(null);
+
+  const handleNewBookNameChange = (event) => {
+    setNewBookName(event.target.value);
+  };
 
   const handleCreate = () => {
     if (newBookName.length > 45) {
@@ -23,12 +27,19 @@ function NewAttendanceBook(props) {
     } else {
       const token = getToken();
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/addbook`,
-        {"bookname": newBookName},
-        { headers: {"Authorization" : `Bearer ${token}`}})
+        {
+          "bookname": newBookName
+        },
+        { 
+          headers: {
+            "Authorization" : `Bearer ${token}`
+          }
+        })
         .then(res => {
           onAdd();
-          setOpen(false);
-        }).catch((error) => { 
+          setOpenNewBookDialog(false);
+        })
+        .catch((error) => { 
           if (error.response.status === 401) {
             navigate('/signin');
           }
@@ -36,10 +47,15 @@ function NewAttendanceBook(props) {
     }
   }
 
+  const handleCancel = () => {
+    setOpenNewBookDialog(false);
+    setWarnMsg(null);
+  };
+
   return (
     <Grid item xs={12} sm={4}>
       <Box
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenNewBookDialog(true)}
         sx={{
           backgroundColor: theme.palette.primary.lighter,
           display: 'flex',
@@ -59,7 +75,7 @@ function NewAttendanceBook(props) {
       >
         <Typography variant="p">Create New Book</Typography>
       </Box>
-      <Dialog open={open} onBackdropClick={() => {setOpen(false); setWarnMsg(null);}}>
+      <Dialog open={openNewBookDialog} onBackdropClick={handleCancel}>
         <DialogTitle>Create New Book</DialogTitle>
         <DialogContent>
           <TextField
@@ -69,12 +85,12 @@ function NewAttendanceBook(props) {
             type="text"
             fullWidth
             variant="standard"
-            onChange={(event) => setNewBookName(event.target.value)}
+            onChange={handleNewBookNameChange}
           />
           <AlertFeedback msg={warnMsg} severity={alertSeverity.WARN} onClose={() => setWarnMsg(null)} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {setOpen(false); setWarnMsg(null);}}>Cancel</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
           <Button onClick={handleCreate}>Create</Button>
         </DialogActions>
       </Dialog>

@@ -28,16 +28,21 @@ function SheetHeader(props) {
   const fetchDates = () => {
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
-      { headers: {"Authorization" : `Bearer ${token}`}})
+      { 
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
       .then(res => {
         const dates = res.data;
         setSelectedDate(date);
         setDates(dates);
-      }).catch((error) => { 
+      })
+      .catch((error) => { 
         if (error.response.status === 401) {
           navigate('/signin');
         }
-    })
+      });
   };
 
   const handleSelectDate = (event) => {
@@ -50,7 +55,12 @@ function SheetHeader(props) {
     })
   };
 
-  const handleDelete = (isConfirmed) => {
+  const handleDelConfirmClose = (isConfirmed) => {
+    setOpenDelConfirmation(false); 
+    handleDeleteSheet(isConfirmed);
+  };
+
+  const handleDeleteSheet = (isConfirmed) => {
     if (isConfirmed) {
       // Send API call to delete selectedDate with sheetID
       const token = getToken();
@@ -110,7 +120,7 @@ function SheetHeader(props) {
       </Grid>
       <ConfirmationDialog 
         open={openDelConfirmation} 
-        onClose={(isConfirmed) => { setOpenDelConfirmation(false); handleDelete(isConfirmed);}}
+        onClose={(isConfirmed) => handleDelConfirmClose(isConfirmed)}
         title="Delete current sheet?"
         text="Please note that ALL ATTENDANCE DATA of from today will be permanently deleted. Proceed to delete sheet?"
         cancelButtonText="Cancel"

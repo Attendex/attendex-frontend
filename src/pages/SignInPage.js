@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Collapse, Card, TextField, Typography, Box, Button } from '@mui/material';
+import { Card, TextField, Typography, Box, Button } from '@mui/material';
 import { storeToken } from '../utils/utils';
 import { alertSeverity } from '../components/AlertFeedback';
 import AlertFeedback from '../components/AlertFeedback';
@@ -19,11 +19,13 @@ function SignInPage() {
       {
         "userid": username, 
         "password": password,
-      }).then(res => {
+      })
+      .then(res => {
         storeToken(res.data.accessToken);  // Store jwt token in localStorage as token with expiry of 30mins
         const decoded = jwt_decode(res.data.accessToken);
         navigate(`/${decoded.userid}`);
-      }).catch((error) => { 
+      })
+      .catch((error) => { 
         if (error.response.status === 403) {
           setErrorMsg("Invalid username or password! Please try again.");
         }

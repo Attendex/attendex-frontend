@@ -21,14 +21,19 @@ function MyAttendanceBooks() {
   const fetchAttBooks = () => {
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getbook`,
-      { headers: {"Authorization" : `Bearer ${token}`}})
+      { 
+        headers: {
+          "Authorization" : `Bearer ${token}`
+        }
+      })
       .then(res => {
         setAttBooks(res.data);
-      }).catch((error) => { 
+      })
+      .catch((error) => { 
         if (error.response.status === 401) {
           navigate('/signin');
         }
-    })
+    });
   }
 
   const handleAddNewAttBook = () => {
@@ -36,12 +41,17 @@ function MyAttendanceBooks() {
     setSuccessMsg("Book added successfully!");
   };
 
+  const handleDeleteAttBook = () => {
+    fetchAttBooks();
+    setSuccessMsg("Book deleted successfully!");
+  };
+
   const renderAttBooks = () => {
     return attBooks.map((book) => (
       <AttendanceBook 
         key={book.bookID} 
         book={book} 
-        onDeleteBook={() => {fetchAttBooks(); setSuccessMsg("Book deleted successfully!");}}
+        onDeleteBook={handleDeleteAttBook}
       />
     ));
   };

@@ -18,21 +18,25 @@ function BookLandingPage() {
   }, [username, bookName, bookId]);
 
   const fetchDates = () => {
-    // Get dates and redirect to latest date
     const token = getToken();
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getdate?bookid=${bookId}`,
-      { headers: {"Authorization" : `Bearer ${token}`}})
+      { 
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
       .then(res => {
         if (res.data.length > 0) {
           const date = res.data[0].date;
           const sheetId = res.data[0].sheetID;
           navigate(`/${username}/${bookName}/${bookId}/${date}/${sheetId}`);
         } 
-      }).catch((error) => { 
+      })
+      .catch((error) => { 
         if (error.response.status === 401) {
           navigate('/signin');
         }
-    })
+      });
   };
 
   return (
